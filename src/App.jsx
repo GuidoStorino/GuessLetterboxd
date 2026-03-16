@@ -1,9 +1,31 @@
 import { useState, useEffect, useRef } from "react";
 
-// ─── NOTA SOBRE CAMBIO 3: Las reseñas de rank:3 (la primera que ve el usuario)
-// fueron reescritas para no contener nombres propios de personas, directores ni actores.
-// Las de rank:2 y rank:1 pueden tenerlos, ya que se muestran después.
+// ════════════════════════════════════════════════════════════
+//  SHARED DATA & HELPERS
+// ════════════════════════════════════════════════════════════
 
+function getTodayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+}
+function getDayIndex() {
+  const epoch = new Date(2024, 0, 1);
+  return Math.floor((new Date() - epoch) / 86400000);
+}
+function normalize(str) {
+  return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim();
+}
+function getTimeUntilMidnight() {
+  const now = new Date(), mid = new Date(now);
+  mid.setHours(24,0,0,0);
+  const d = mid - now;
+  return { h:Math.floor(d/3600000), m:Math.floor((d%3600000)/60000), s:Math.floor((d%60000)/1000) };
+}
+const pad = n => String(n).padStart(2,"0");
+
+// ════════════════════════════════════════════════════════════
+//  MOVIES DATA
+// ════════════════════════════════════════════════════════════
 const MOVIES = [
   { id:1, title:"Parasite", year:2019, director:"Bong Joon-ho", stars:"★★★★★", reviews:[
     {rank:3,author:"davidehrlich",text:"The best film of the decade is also the funniest, the scariest, and the most heartbreaking. A movie that can't be described without ruining it, and can't be ruined even if you describe it."},
@@ -100,165 +122,154 @@ const MOVIES = [
     {rank:2,author:"adam_driver_stans",text:"Adam Driver singing 'Being Alive' at the end destroyed something in me that I haven't fully rebuilt. He just stands there and sings and the whole film collapses into it."},
     {rank:1,author:"scarjo_legal",text:"The lawyer scenes are devastatingly funny and then suddenly devastating. Laura Dern plays someone who understands that the law is not about fairness, and she eats every scene she's in."},
   ]},
-  { id:20, title:"Burning", year:2018, director:"Lee Chang-dong", stars:"★★★★½", reviews:[
-    {rank:3,author:"lee_chang_dong",text:"A mystery with no solution, a thriller with no resolution, a love story with no happy ending. Tension built for two and a half hours and never released. You leave feeling haunted."},
-    {rank:2,author:"steven_yeun_global",text:"Steven Yeun's performance is the most chilling thing I've seen in years. He plays a man who may or may not be a murderer with the calm of someone who has never needed to explain himself."},
-    {rank:1,author:"greenhouse_burning",text:"The scene where she dances at sunset while he watches is one of the most beautiful and sinister images I've seen. I thought about it every day for a week."},
-  ]},
-  { id:21, title:"Her", year:2013, director:"Spike Jonze", stars:"★★★★½", reviews:[
-    {rank:3,author:"spike_jonze_fan",text:"A film about loneliness disguised as a film about technology. It predicted everything wrong with how we relate to each other in the digital age and did it through a love story."},
-    {rank:2,author:"scarlett_voice",text:"Scarlett Johansson does more with her voice alone than most actors do with their entire bodies. The relationship feels completely real, which makes the ending completely devastating."},
-    {rank:1,author:"los_angeles_future",text:"The production design of a warm, muted, slightly wrong future city is one of the most beautiful visions of the near future ever put on screen."},
-  ]},
-  { id:22, title:"The Lighthouse", year:2019, director:"Robert Eggers", stars:"★★★★½", reviews:[
-    {rank:3,author:"eggers_apostle",text:"Shot in black and white in a nearly square aspect ratio — two men going insane on an island. One of the most formally audacious things I've seen in a cinema in years."},
-    {rank:2,author:"dafoe_pattinson",text:"Dafoe and Pattinson. Two hours. A lighthouse. No one else. The performances are so committed and so unhinged that by the end you're not sure who is real."},
-    {rank:1,author:"prometheus_ending",text:"The final image. I closed my eyes. I opened them again. It was still there. This director isn't making horror films — he's building modern myths."},
-  ]},
-  { id:23, title:"Midsommar", year:2019, director:"Ari Aster", stars:"★★★★", reviews:[
-    {rank:3,author:"folk_horror_fan",text:"A horror film set entirely in daylight, which shouldn't work and absolutely does. The most disturbing thing isn't darkness — it's a community that smiles while it destroys you."},
-    {rank:2,author:"florence_pugh_era",text:"Florence Pugh crying on the grass while the cult women mirror her grief is the most cathartic image of 2019. This is a breakup movie dressed as folk horror and both readings are correct."},
-    {rank:1,author:"may_queen_me",text:"I came for horror and got a film about a woman finally being truly, completely seen — even if what sees her is a pagan cult. The ending is horrifying and triumphant simultaneously."},
-  ]},
-  { id:24, title:"Past Lives", year:2023, director:"Celine Song", stars:"★★★★★", reviews:[
+  { id:20, title:"Past Lives", year:2023, director:"Celine Song", stars:"★★★★★", reviews:[
     {rank:3,author:"celine_song_debut",text:"The most devastating film of 2023 and it never once raises its voice. The saddest things in life are not tragedies but choices — and the lives unlived because of them."},
     {rank:2,author:"greta_lee_forever",text:"Greta Lee in the final scene, in the car, alone — I've never seen a face carry so much simultaneously. Joy and grief and love and loss in one expression. How?"},
     {rank:1,author:"in_yun_believer",text:"The concept of in-yun — that meeting someone requires 8,000 layers of fate — makes the ending unbearable. Because if all that was needed to get here, what does here even mean?"},
   ]},
-  { id:25, title:"Oppenheimer", year:2023, director:"Christopher Nolan", stars:"★★★★½", reviews:[
+  { id:21, title:"Oppenheimer", year:2023, director:"Christopher Nolan", stars:"★★★★½", reviews:[
     {rank:3,author:"nolan_faithful",text:"A three-hour film about a man who invented the apocalypse and it never once feels long. The trial scenes are more tense than any action sequence the director has ever shot."},
     {rank:2,author:"cillian_era",text:"Cillian Murphy's eyes contain the entire film. He plays a man watching himself become a symbol and losing himself in the process. The weight of that is in every frame he's in."},
     {rank:1,author:"trinity_test_fan",text:"The Trinity test sequence. No score. Just silence, then the blast, then the sound catching up. I've never felt dread in an IMAX theater like that. I understood, physically, what it felt like to witness the end."},
   ]},
-  { id:26, title:"Roma", year:2018, director:"Alfonso Cuarón", stars:"★★★★★", reviews:[
-    {rank:3,author:"cuaron_memoria",text:"A memory film that is a love letter to a woman largely invisible in the director's own childhood. The act of seeing her now, fully, as the center of everything, is itself the film's moral argument."},
-    {rank:2,author:"yalitza_aparicio",text:"Yalitza Aparicio had never acted before this film. Her face holds everything. The beach scene at the end — a non-actress wading into the ocean to save two children — made me forget to breathe."},
-    {rank:1,author:"black_white_mexico",text:"Shot in black and white and deeply, achingly specific. Every frame looks like a memory that's been preserved just slightly beyond what memory allows. It's grief rendered as image."},
-  ]},
-  { id:27, title:"The Grand Budapest Hotel", year:2014, director:"Wes Anderson", stars:"★★★★½", reviews:[
-    {rank:3,author:"wes_symmetry",text:"The artifice is the point — a dollhouse Europe built to show you the real grief hiding inside it. The melancholy hits harder because the surface is so relentlessly pretty."},
-    {rank:2,author:"ralph_fiennes_hat",text:"Ralph Fiennes at the peak of his comedic powers, which turns out to be a completely different peak than his dramatic powers and both are towering. M. Gustave is one of cinema's great characters."},
-    {rank:1,author:"lobby_boy_life",text:"The frame-within-a-frame-within-a-frame structure isn't a gimmick — it's the story. Each layer of storytelling is a layer of loss. By the time you understand that, the film is over."},
-  ]},
-  { id:28, title:"Arrival", year:2016, director:"Denis Villeneuve", stars:"★★★★½", reviews:[
-    {rank:3,author:"villeneuve_science",text:"First contact made to feel like grief. The film reframes everything you've watched in its final minutes and somehow every choice that came before becomes more beautiful, not less."},
-    {rank:2,author:"amy_adams_carries",text:"Amy Adams holds this film together through sheer emotional intelligence. The scene where she walks into the alien ship alone — calm, prepared, terrified — is one of the decade's great moments of acting."},
-    {rank:1,author:"heptapod_linguist",text:"A film that argues that knowing the future doesn't make it easier — it makes it more meaningful. I've thought about that idea every day since I saw it. This film changed how I think about time."},
-  ]},
-  { id:29, title:"Phantom Thread", year:2017, director:"Paul Thomas Anderson", stars:"★★★★½", reviews:[
-    {rank:3,author:"pta_devotee",text:"A film about a controlling man and a woman who finds the one way to hold power over him — and it is somehow one of the most romantic films of the decade. Every breakfast is a battle."},
-    {rank:2,author:"daniel_ddl_final",text:"Daniel Day-Lewis' final performance is a masterclass in playing a man who mistakes rigidity for identity. Every breakfast scene is a battle. Every dress fitting is a negotiation of dominance."},
-    {rank:1,author:"vicky_krieps_wins",text:"Vicky Krieps steals the film from Daniel Day-Lewis, which should be impossible. She plays submission as strategy and the film belongs to her from the moment she orders the massive breakfast."},
-  ]},
-  { id:30, title:"Shoplifters", year:2018, director:"Hirokazu Kore-eda", stars:"★★★★★", reviews:[
-    {rank:3,author:"koreeda_family",text:"What makes a family? The answer isn't given in dialogue but in small acts of care — shared meals, inside jokes, physical warmth. Then the film shows you what the law thinks a family is."},
-    {rank:2,author:"palme_dor_2018",text:"The reveal of what this family actually is, and how they came to be, doesn't make you love them less. It makes you love them more. That is an extraordinary achievement in storytelling."},
-    {rank:1,author:"japanese_poverty",text:"The scene where the child waves goodbye through the window is one of the most heartbreaking images in cinema. The film earns it completely. I cried in public and I regret nothing."},
-  ]},
-  { id:31, title:"First Reformed", year:2017, director:"Paul Schrader", stars:"★★★★½", reviews:[
-    {rank:3,author:"schrader_returns",text:"A man losing his faith in both God and humanity simultaneously, told through a journal that gets more desperate with every entry. A masterpiece from a director working at the height of his powers."},
-    {rank:2,author:"ethan_hawke_best",text:"The best performance of Ethan Hawke's career and it's not close. He plays hollowness in the shape of a man. You watch the light going out behind his eyes in real time."},
-    {rank:1,author:"levitation_scene",text:"The levitation scene. I don't know how to explain it. I don't know if it's real in the film's logic. I know it made me feel something I've never felt watching a movie."},
-  ]},
-  { id:32, title:"The Banshees of Inisherin", year:2022, director:"Martin McDonagh", stars:"★★★★½", reviews:[
-    {rank:3,author:"mcdonagh_island",text:"Set on a tiny island during a civil war, told through the story of a man who simply decides to stop being someone's friend. The allegory is so precise it hurts."},
-    {rank:2,author:"colin_brendan_duo",text:"Colin Farrell plays bewilderment as tragedy and it works completely. He cannot understand why his friend no longer likes him, and that incomprehension is the most human thing I've seen on screen this year."},
-    {rank:1,author:"donkey_jenny_fan",text:"This director is cruel and I mean that as the highest compliment. He will not give you what you want. He will give you something worse. The ending is a gut punch delivered slowly."},
-  ]},
-  { id:33, title:"Spencer", year:2021, director:"Pablo Larraín", stars:"★★★★", reviews:[
-    {rank:3,author:"larrain_portrait",text:"A psychological horror film about a woman being crushed by an institution — calling itself a biopic. Both descriptions are accurate. A mind coming apart across three days at Christmas."},
-    {rank:2,author:"kristen_stewart_fan",text:"Kristen Stewart gives a performance so physical and so desperate that I stopped seeing a historical figure and started seeing someone drowning in full view of a crowd that refuses to acknowledge it."},
-    {rank:1,author:"ghost_anne_boleyn",text:"Anne Boleyn appears as a ghost and it's not a dream sequence — it's the only logical thing in the film. History as haunting. The crown as murder weapon. Extraordinary."},
-  ]},
-  { id:34, title:"The Holdovers", year:2023, director:"Alexander Payne", stars:"★★★★½", reviews:[
+  { id:22, title:"The Holdovers", year:2023, director:"Alexander Payne", stars:"★★★★½", reviews:[
     {rank:3,author:"payne_comeback",text:"So warm and funny and sad that I forgot I was watching a film. It just felt like spending time with people I loved and then having to say goodbye. A film about loneliness that refuses to be lonely."},
     {rank:2,author:"paul_giamatti_again",text:"Paul Giamatti hasn't been this good since Sideways, which is saying everything. He plays a man whose entire personality is a wall he built to keep people out, and the film is about one Christmas that damaged the wall."},
     {rank:1,author:"da_vine_joy_randolph",text:"Da'Vine Joy Randolph. Full stop. Her grief is the moral center of the film and she carries it with such dignity and such pain that every scene she's in becomes the most important scene in the movie."},
   ]},
-  { id:35, title:"Joker", year:2019, director:"Todd Phillips", stars:"★★★★", reviews:[
-    {rank:3,author:"phoenix_committed",text:"A performance so committed and physically total that it demands to be seen. The lead actor didn't play the character — he dissolved into him. Whatever you think of the politics, the acting is undeniable."},
-    {rank:2,author:"staircase_scene",text:"The staircase dance scene is one of those rare moments where a film suddenly becomes itself. Up to that point it's good. After that point it's something else entirely."},
-    {rank:1,author:"de_niro_mirror",text:"The De Niro casting is so deliberate it borders on theory. A King of Comedy sequel that De Niro doesn't know he's in. That's either genius or audacity. Possibly both."},
-  ]},
-  { id:36, title:"Bones and All", year:2022, director:"Luca Guadagnino", stars:"★★★★", reviews:[
-    {rank:3,author:"guadagnino_road",text:"A road movie about two outcasts falling in love — the most tender film about belonging and self-acceptance of the year. The unacceptable made to feel inevitable. Beautiful and disturbing in equal measure."},
-    {rank:2,author:"timothee_taylor_duo",text:"Timothée Chalamet and Taylor Russell have the kind of chemistry that makes you believe entirely in their doomed love story. The film doesn't romanticize what they are — but it loves who they are."},
-    {rank:1,author:"mark_rylance_sully",text:"Mark Rylance appears for twenty minutes and makes the whole film feel dangerous. He plays a man who has accepted himself completely, and his peace is more frightening than any rage."},
-  ]},
-  { id:37, title:"C'mon C'mon", year:2021, director:"Mike Mills", stars:"★★★★", reviews:[
-    {rank:3,author:"mike_mills_bw",text:"Shot in black and white. An uncle and a nephew, together for a few weeks. The most tender, intelligent film about children I've ever seen — it listens to the child as though his thoughts matter. Because they do."},
-    {rank:2,author:"joaquin_uncle",text:"Joaquin Phoenix plays softness and uncertainty and it's almost disorienting after years of watching him play intensity. He's wonderful here in a way that requires him to do less, which turns out to be much harder."},
-    {rank:1,author:"woody_norman_kid",text:"Woody Norman is one of the best child performances in recent memory. He plays a kid who asks real questions and refuses easy answers and somehow this is the most radical act a film can perform."},
-  ]},
-  { id:38, title:"Zola", year:2021, director:"Janicza Bravo", stars:"★★★★", reviews:[
-    {rank:3,author:"twitter_film",text:"Based on a viral thread — more formally inventive than most films based on novels. The cadence of social media storytelling turned into cinema. It should not work this well and it absolutely does."},
-    {rank:2,author:"taylour_paige_now",text:"Taylour Paige's face throughout this film is a masterclass in contained fury. She knows things the audience doesn't. She knows things the other characters don't. She knows too much."},
-    {rank:1,author:"colman_domingo_zola",text:"Colman Domingo plays a character so menacing and so funny that laughing at him feels like a trap — and it is. The film uses genre to talk about exploitation in ways a drama never could."},
-  ]},
-  { id:39, title:"Beau Is Afraid", year:2023, director:"Ari Aster", stars:"★★★½", reviews:[
-    {rank:3,author:"aster_committed",text:"A three-hour anxiety dream about a man who cannot stop apologizing for existing. One of the most committed pieces of cinema I've ever been assaulted by. The city outside his apartment is a vision of hell."},
-    {rank:2,author:"joaquin_beau",text:"Joaquin Phoenix plays a man so paralyzed by guilt and fear that just watching him move through a scene becomes unbearable. It is a performance of extraordinary physical commitment."},
-    {rank:1,author:"no_easy_answers",text:"This film will not be for everyone and the director knows that and does not care. That defiance — making something genuinely weird at massive scale — is itself a kind of heroism."},
-  ]},
-  { id:40, title:"Saltburn", year:2023, director:"Emerald Fennell", stars:"★★★★", reviews:[
+  { id:23, title:"Saltburn", year:2023, director:"Emerald Fennell", stars:"★★★★", reviews:[
     {rank:3,author:"fennell_obsession",text:"A film about obsession and class that refuses to be a morality tale. The estate itself is a character — vast, golden, indifferent. The camera loves excess the same way the protagonist does."},
     {rank:2,author:"barry_keoghan_fan",text:"Barry Keoghan spends two hours making you believe one thing and then the film ends and you realize you believed nothing. The performance is a long con and he never breaks character for a second."},
     {rank:1,author:"final_dance_forever",text:"The final scene. I watched it three times. I cannot tell if it's empowering or horrifying. I think that's the point. The director holds the camera steady and lets you sit with it."},
   ]},
 ];
 
-// ─── HELPERS ─────────────────────────────────────────────────────────────────
-function getTodayKey() {
-  const d = new Date();
-  return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
-}
-function getDailyMovie() {
-  const epoch = new Date(2024, 0, 1);
-  const days = Math.floor((new Date() - epoch) / 86400000);
-  return MOVIES[((days % MOVIES.length) + MOVIES.length) % MOVIES.length];
-}
-function normalize(str) {
-  return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim();
-}
-function getTimeUntilMidnight() {
-  const now = new Date();
-  const mid = new Date(now); mid.setHours(24,0,0,0);
-  const diff = mid - now;
-  return { h:Math.floor(diff/3600000), m:Math.floor((diff%3600000)/60000), s:Math.floor((diff%60000)/1000) };
-}
+// ════════════════════════════════════════════════════════════
+//  SONGS DATA  — videoId = YouTube video ID, startAt = second to begin from
+// ════════════════════════════════════════════════════════════
+// Género: indie/rock alternativo 2000s-2010s · Dificultad: media
+// Nota: si un videoId deja de funcionar (video eliminado/bloqueado),
+// buscá el video oficial en YouTube y reemplazá los 11 caracteres de la URL.
+const SONGS = [
+  // ── Arctic Monkeys ──
+  { id:1,  title:"Do I Wanna Know?",          artist:"Arctic Monkeys",   year:2013, videoId:"bpOSxM0MfDA", startAt:0  },
+  { id:2,  title:"R U Mine?",                 artist:"Arctic Monkeys",   year:2012, videoId:"sBmNp9kgOhQ", startAt:0  },
+  { id:3,  title:"505",                       artist:"Arctic Monkeys",   year:2007, videoId:"XOyyAMFSICQ", startAt:0  },
+  { id:4,  title:"Fluorescent Adolescent",    artist:"Arctic Monkeys",   year:2011, videoId:"_LyOoZeGIKk", startAt:0  },
+  // ── The Strokes ──
+  { id:5,  title:"Last Nite",                 artist:"The Strokes",      year:2001, videoId:"TOypSnKFHnI", startAt:0  },
+  { id:6,  title:"Reptilia",                  artist:"The Strokes",      year:2003, videoId:"XzFMGA3Mhqg", startAt:0  },
+  { id:7,  title:"Someday",                   artist:"The Strokes",      year:2001, videoId:"4NtYlHOgNJU", startAt:0  },
+  // ── Radiohead ──
+  { id:8,  title:"Karma Police",              artist:"Radiohead",        year:1997, videoId:"1uYWYWPc9HU", startAt:0  },
+  { id:9,  title:"Creep",                     artist:"Radiohead",        year:1992, videoId:"XFkzRNyygfk", startAt:0  },
+  { id:10, title:"Fake Plastic Trees",        artist:"Radiohead",        year:1995, videoId:"n5hP9WTKM4A", startAt:0  },
+  // ── Arcade Fire ──
+  { id:11, title:"Wake Up",                   artist:"Arcade Fire",      year:2004, videoId:"hinPSUMFAWA", startAt:0  },
+  { id:12, title:"Rebellion (Lies)",          artist:"Arcade Fire",      year:2004, videoId:"X3RiJoV2g1c", startAt:0  },
+  { id:13, title:"Ready to Start",            artist:"Arcade Fire",      year:2010, videoId:"q5EcLJV9xH4", startAt:0  },
+  // ── Nirvana ──
+  { id:14, title:"Come as You Are",           artist:"Nirvana",          year:1991, videoId:"vabnZ9-ex7o", startAt:0  },
+  { id:15, title:"In Bloom",                  artist:"Nirvana",          year:1991, videoId:"PbgKEjNBHqM", startAt:0  },
+  { id:16, title:"The Man Who Sold the World",artist:"Nirvana",          year:1994, videoId:"swpHPiAWmEo", startAt:0  },
+  // ── Oasis ──
+  { id:17, title:"Champagne Supernova",       artist:"Oasis",            year:1995, videoId:"tI-5uv4wryI", startAt:0  },
+  { id:18, title:"Don't Look Back in Anger",  artist:"Oasis",            year:1996, videoId:"r8OipmKFDeM", startAt:0  },
+  { id:19, title:"Half the World Away",       artist:"Oasis",            year:1994, videoId:"j8hEMDCE_q4", startAt:0  },
+  // ── The Cure ──
+  { id:20, title:"Friday I'm in Love",        artist:"The Cure",         year:1992, videoId:"mGgMZpGYiy8", startAt:0  },
+  { id:21, title:"Lovesong",                  artist:"The Cure",         year:1989, videoId:"3-lBEPGFDHo", startAt:0  },
+  // ── Interpol ──
+  { id:22, title:"Obstacle 1",               artist:"Interpol",          year:2002, videoId:"XsxuONy8TbI", startAt:0  },
+  { id:23, title:"Slow Hands",               artist:"Interpol",          year:2002, videoId:"U9lECvtKBGs", startAt:0  },
+  // ── The National ──
+  { id:24, title:"Bloodbuzz Ohio",            artist:"The National",     year:2010, videoId:"Q3Kvu6Kgp88", startAt:0  },
+  { id:25, title:"Sorrow",                    artist:"The National",     year:2010, videoId:"h-OONlVqEGo", startAt:0  },
+  // ── Neutral Milk Hotel / Indie clásico ──
+  { id:26, title:"Holland, 1945",             artist:"Neutral Milk Hotel",year:1998, videoId:"LRkSK7JFZS8", startAt:0  },
+  // ── LCD Soundsystem ──
+  { id:27, title:"All My Friends",            artist:"LCD Soundsystem",  year:2007, videoId:"3lPgLng5RIE", startAt:0  },
+  { id:28, title:"Someone Great",             artist:"LCD Soundsystem",  year:2007, videoId:"nEjbBBDfv-k", startAt:0  },
+  // ── Vampire Weekend ──
+  { id:29, title:"A-Punk",                    artist:"Vampire Weekend",  year:2008, videoId:"_XC2xnGBwBo", startAt:0  },
+  { id:30, title:"Oxford Comma",              artist:"Vampire Weekend",  year:2008, videoId:"P_zkMeFHbpI", startAt:0  },
+  // ── Pixies ──
+  { id:31, title:"Where Is My Mind?",         artist:"Pixies",           year:1988, videoId:"GGc9TgCOrHs", startAt:0  },
+  { id:32, title:"Here Comes Your Man",       artist:"Pixies",           year:1989, videoId:"8RrWvS5pBz8", startAt:0  },
+  // ── Wilco ──
+  { id:33, title:"Jesus, Etc.",               artist:"Wilco",            year:2001, videoId:"4fHw4GeW3EU", startAt:0  },
+  // ── Bon Iver ──
+  { id:34, title:"Skinny Love",               artist:"Bon Iver",         year:2007, videoId:"ssdgB-XKMgA", startAt:0  },
+  { id:35, title:"Holocene",                  artist:"Bon Iver",         year:2011, videoId:"TWcyIpul8OE", startAt:0  },
+  // ── Fleet Foxes ──
+  { id:36, title:"White Winter Hymnal",       artist:"Fleet Foxes",      year:2008, videoId:"KmFUnrFThgk", startAt:0  },
+  { id:37, title:"Mykonos",                   artist:"Fleet Foxes",      year:2009, videoId:"3EDnMOfMGcA", startAt:0  },
+  // ── The War on Drugs ──
+  { id:38, title:"Red Eyes",                  artist:"The War on Drugs",  year:2014, videoId:"rT9yRGHoWJ8", startAt:0  },
+  // ── Tame Impala ──
+  { id:39, title:"Feels Like We Only Go Backwards", artist:"Tame Impala", year:2012, videoId:"4-MBGtJlwGQ", startAt:0  },
+  { id:40, title:"Let It Happen",             artist:"Tame Impala",      year:2015, videoId:"pFptt7Cargc", startAt:0  },
+];
 
-// ─── STYLES ──────────────────────────────────────────────────────────────────
-const css = `
+// ════════════════════════════════════════════════════════════
+//  GLOBAL CSS
+// ════════════════════════════════════════════════════════════
+const GLOBAL_CSS = `
   @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
     --bg:#14181c;--surface:#1c2228;--surface2:#212830;
     --border:#2c3440;--border2:#3a4455;
     --green:#00c030;--green-dark:#009924;--green-glow:rgba(0,192,48,0.12);
-    --blue:#40bcf4;--orange:#ff8000;
+    --blue:#40bcf4;--blue-glow:rgba(64,188,244,0.12);--blue-dark:#1a8abf;
+    --orange:#ff8000;
     --text:#9ab;--text-bright:#cdd5db;--text-dim:#4a5568;
     --radius:8px;--font:'DM Sans',system-ui,sans-serif;--serif:'Source Serif 4',Georgia,serif;
   }
   html,body{background:var(--bg);color:var(--text-bright);font-family:var(--font);min-height:100vh;-webkit-font-smoothing:antialiased}
   .app{min-height:100vh;display:flex;flex-direction:column;align-items:center;background:var(--bg)}
 
-  /* NAV */
-  .nav{width:100%;max-width:640px;padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
-  .nav-brand{display:flex;align-items:center;gap:8px}
+  /* ── NAV ── */
+  .nav{width:100%;max-width:680px;padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:30}
+  .nav-brand{display:flex;align-items:center;gap:8px;cursor:pointer}
   .nav-dots{display:flex;gap:3px;align-items:center}
   .nav-dot{border-radius:50%}
   .nav-dot:nth-child(1){width:8px;height:8px;background:var(--green)}
   .nav-dot:nth-child(2){width:10px;height:10px;background:var(--blue)}
   .nav-dot:nth-child(3){width:8px;height:8px;background:var(--orange)}
   .nav-title{font-family:var(--serif);font-size:1rem;color:var(--text-bright)}
+  .nav-right{display:flex;align-items:center;gap:0.75rem}
   .nav-date{font-size:0.68rem;color:var(--text-dim);letter-spacing:0.06em;font-weight:500;text-transform:uppercase}
+  .nav-back{font-size:0.72rem;color:var(--text-dim);cursor:pointer;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;transition:color 0.15s;border:none;background:none;padding:0.2rem 0.5rem}
+  .nav-back:hover{color:var(--text-bright)}
 
-  /* MAIN */
-  .main{width:100%;max-width:640px;padding:1.5rem 1.25rem 3rem;display:flex;flex-direction:column;gap:1.25rem}
+  /* ── HOME ── */
+  .home{width:100%;max-width:680px;padding:3rem 1.25rem;display:flex;flex-direction:column;align-items:center;gap:2.5rem}
+  .home-hero{display:flex;flex-direction:column;align-items:center;gap:0.75rem;text-align:center}
+  .home-title{font-family:var(--serif);font-size:clamp(1.8rem,5vw,2.6rem);font-weight:300;color:var(--text-bright);line-height:1.1}
+  .home-sub{font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-dim);font-weight:600}
+  .home-cards{display:grid;grid-template-columns:1fr 1fr;gap:1rem;width:100%}
+  @media(max-width:500px){.home-cards{grid-template-columns:1fr}}
+  .home-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.75rem 1.5rem;cursor:pointer;transition:all 0.2s;display:flex;flex-direction:column;gap:1rem}
+  .home-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.3)}
+  .home-card.green:hover{border-color:var(--green-dark)}
+  .home-card.blue:hover{border-color:var(--blue-dark)}
+  .home-card-icon{font-size:1.75rem}
+  .home-card-name{font-family:var(--serif);font-size:1.2rem;font-weight:400;color:var(--text-bright)}
+  .home-card-desc{font-size:0.78rem;color:var(--text-dim);line-height:1.5}
+  .home-card-badge{display:flex;align-items:center;gap:0.35rem;font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-top:auto}
+  .home-card.green .home-card-badge{color:var(--green)}
+  .home-card.blue .home-card-badge{color:var(--blue)}
+  .badge-dot{width:5px;height:5px;border-radius:50%}
+  .home-card.green .badge-dot{background:var(--green)}
+  .home-card.blue .badge-dot{background:var(--blue)}
+
+  /* ── MAIN WRAPPER ── */
+  .main{width:100%;max-width:680px;padding:1.5rem 1.25rem 3rem;display:flex;flex-direction:column;gap:1.25rem}
+
+  /* ── LETTERBOXD GAME ── */
   .header-label{font-size:0.65rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-dim);font-weight:600;margin-bottom:0.25rem}
-  .header-title{font-family:var(--serif);font-size:clamp(1.2rem,3.5vw,1.6rem);font-weight:300;color:var(--text-bright);line-height:1.25}
-
-  /* PIPS */
+  .header-title{font-family:var(--serif);font-size:clamp(1.1rem,3vw,1.5rem);font-weight:300;color:var(--text-bright);line-height:1.25}
   .pips-row{display:flex;gap:6px;align-items:center}
   .pip-wrap{display:flex;flex-direction:column;gap:3px;align-items:center}
   .pip{width:40px;height:3px;border-radius:2px;background:var(--border);transition:background 0.3s}
@@ -268,8 +279,6 @@ const css = `
   .pip-sep{width:1px;height:16px;background:var(--border);margin:0 4px}
   .pts-now{font-size:0.7rem;font-weight:700;color:var(--text-dim)}
   .pts-now b{color:var(--green);font-size:0.85rem}
-
-  /* CARD */
   .scene{perspective:1100px;width:100%}
   .card-wrap{position:relative;width:100%;min-height:240px;transform-style:preserve-3d;transition:transform 0.65s cubic-bezier(0.35,0,0.2,1)}
   .card-wrap.flipped{transform:rotateY(180deg)}
@@ -283,92 +292,145 @@ const css = `
   .pts-pill{font-size:0.65rem;padding:0.15rem 0.45rem;border-radius:4px;border:1px solid var(--border);color:var(--text-dim);font-weight:600}
   .pts-pill b{color:var(--green)}
   .quote-area{flex:1;display:flex;flex-direction:column;gap:0.6rem}
-  .stars{color:var(--orange);font-size:0.82rem;letter-spacing:-0.5px}
-  .quote-text{font-family:var(--serif);font-size:clamp(0.9rem,2vw,1.08rem);font-weight:300;line-height:1.72;color:var(--text-bright);font-style:italic;flex:1}
+  .stars-orange{color:var(--orange);font-size:0.82rem;letter-spacing:-0.5px}
+  .quote-text{font-family:var(--serif);font-size:clamp(0.88rem,2vw,1.05rem);font-weight:300;line-height:1.72;color:var(--text-bright);font-style:italic;flex:1}
   .quote-author{font-size:0.68rem;color:var(--text-dim);font-weight:500}
   .quote-author span{color:var(--green)}
   .tap-hint{font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-dim);text-align:center;padding-top:0.65rem;border-top:1px solid var(--border);opacity:0.4;cursor:pointer;transition:opacity 0.15s}
   .tap-hint:hover{opacity:0.7}
   .rear-icon{font-size:2rem}
-  .rear-title{font-family:var(--serif);font-size:clamp(1.3rem,4vw,1.9rem);font-weight:400;color:var(--text-bright);line-height:1.2}
+  .rear-title{font-family:var(--serif);font-size:clamp(1.2rem,4vw,1.8rem);font-weight:400;color:var(--text-bright);line-height:1.2}
   .rear-meta{font-size:0.73rem;color:var(--text-dim);letter-spacing:0.04em}
   .rear-stars{color:var(--orange);font-size:0.95rem;letter-spacing:-0.5px}
-
-  /* ACTIONS */
   .actions{display:flex;flex-direction:column;gap:0.8rem}
   .toast{padding:0.8rem 1rem;border-radius:var(--radius);font-size:0.86rem;font-weight:500;text-align:center;animation:up 0.2s ease}
   .toast.ok{background:rgba(0,192,48,0.07);border:1px solid var(--green-dark);color:var(--green)}
   .toast.fail{background:rgba(255,80,80,0.06);border:1px solid #5a2a2a;color:#e07070}
   .toast.info{background:var(--surface2);border:1px solid var(--border2);color:var(--text)}
   @keyframes up{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
-
-  /* INPUT + AUTOCOMPLETE */
   .input-wrap{position:relative;width:100%}
   .input-row{display:flex;gap:0.5rem}
   .guess-inp{flex:1;padding:0.75rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-bright);font-family:var(--font);font-size:0.9rem;outline:none;transition:border-color 0.15s;width:100%}
   .guess-inp:focus{border-color:var(--green-dark)}
-  .guess-inp.has-suggestions{border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom-color:transparent}
+  .guess-inp.has-sug{border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom-color:transparent}
   .guess-inp::placeholder{color:var(--text-dim)}
   .guess-btn{padding:0.75rem 1.25rem;background:var(--green);border:none;border-radius:var(--radius);color:#000;font-family:var(--font);font-size:0.82rem;font-weight:700;cursor:pointer;transition:all 0.15s;text-transform:uppercase;letter-spacing:0.04em;white-space:nowrap;align-self:flex-start}
   .guess-btn:hover{background:#00d836}
-
   .suggestions{position:absolute;top:100%;left:0;right:0;background:var(--surface);border:1px solid var(--green-dark);border-top:none;border-bottom-left-radius:var(--radius);border-bottom-right-radius:var(--radius);overflow:hidden;z-index:20;box-shadow:0 8px 24px rgba(0,0,0,0.4)}
-  .suggestion-item{padding:0.65rem 1rem;font-size:0.88rem;color:var(--text-bright);cursor:pointer;transition:background 0.1s;display:flex;align-items:center;gap:0.5rem}
-  .suggestion-item:hover,.suggestion-item.focused{background:var(--green-glow);color:var(--green)}
-  .suggestion-item:not(:last-child){border-bottom:1px solid var(--border)}
-  .suggestion-highlight{color:var(--green);font-weight:600}
-  .suggestion-year{font-size:0.72rem;color:var(--text-dim);margin-left:auto}
-
+  .sug-item{padding:0.65rem 1rem;font-size:0.88rem;color:var(--text-bright);cursor:pointer;transition:background 0.1s;display:flex;align-items:center;gap:0.5rem}
+  .sug-item:hover,.sug-item.focused{background:var(--green-glow);color:var(--green)}
+  .sug-item:not(:last-child){border-bottom:1px solid var(--border)}
+  .sug-hl{color:var(--green);font-weight:600}
+  .sug-year{font-size:0.72rem;color:var(--text-dim);margin-left:auto}
   .hint-actions{display:flex;gap:0.5rem;flex-wrap:wrap}
   .btn-ghost{padding:0.6rem 1rem;border-radius:var(--radius);cursor:pointer;font-family:var(--font);font-size:0.75rem;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;transition:all 0.15s;border:1px solid var(--border2);background:transparent;color:var(--text-dim)}
   .btn-ghost:hover{border-color:var(--text);color:var(--text-bright)}
   .btn-ghost.danger{border-color:#4a2020;color:#a05050}
   .btn-ghost.danger:hover{border-color:#7a3030;color:#e07070}
 
-  /* DONE */
-  .tomorrow{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:1.75rem;padding:2rem;text-align:center}
+  /* ── DONE / TOMORROW ── */
+  .tomorrow{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;gap:1.75rem;padding:2rem;text-align:center;width:100%;max-width:680px}
   .tomorrow-icon{font-size:3rem}
   .tomorrow-title{font-family:var(--serif);font-size:clamp(1.4rem,5vw,2rem);font-weight:300;color:var(--text-bright);line-height:1.25}
-  .tomorrow-title em{color:var(--green);font-style:normal}
-  .tomorrow-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem 1.75rem;display:flex;flex-direction:column;gap:1rem;width:100%;max-width:380px}
+  .tomorrow-title em{font-style:normal}
+  .tomorrow-title.green em{color:var(--green)}
+  .tomorrow-title.blue em{color:var(--blue)}
+  .result-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem 1.75rem;display:flex;flex-direction:column;gap:1rem;width:100%;max-width:400px}
   .t-label{font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-dim);font-weight:600}
-  .t-movie-title{font-family:var(--serif);font-size:1.25rem;color:var(--text-bright);margin-top:0.2rem}
-  .t-movie-meta{font-size:0.72rem;color:var(--text-dim);margin-top:0.1rem}
+  .t-main-title{font-family:var(--serif);font-size:1.25rem;color:var(--text-bright);margin-top:0.2rem}
+  .t-meta{font-size:0.72rem;color:var(--text-dim);margin-top:0.1rem}
   .divider{width:100%;height:1px;background:var(--border)}
   .score-row{display:flex;align-items:center;justify-content:space-between;padding:0.7rem 0.9rem;border-radius:var(--radius);background:var(--surface2);border:1px solid var(--border)}
   .score-row-label{font-size:0.72rem;color:var(--text-dim);font-weight:500}
-  .score-row-val{font-size:1.15rem;font-weight:700;color:var(--green);font-family:var(--font)}
+  .score-row-val{font-size:1.15rem;font-weight:700;font-family:var(--font)}
+  .score-row-val.green{color:var(--green)}
+  .score-row-val.blue{color:var(--blue)}
   .streak-pill{display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.85rem;border-radius:100px;background:var(--surface2);border:1px solid var(--border);font-size:0.72rem;color:var(--text-dim);font-weight:500;align-self:center}
   .streak-pill b{color:var(--orange)}
   .countdown-box{display:flex;flex-direction:column;align-items:center;gap:0.35rem}
   .countdown-label{font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-dim);font-weight:600}
   .countdown{font-family:var(--font);font-size:1.7rem;font-weight:600;color:var(--text-bright);letter-spacing:0.04em}
   .countdown span{color:var(--text-dim);font-weight:300;font-size:1.1rem}
+
+  /* ── SONG GAME ── */
+  .song-header{display:flex;flex-direction:column;gap:0.25rem}
+  .song-progress-row{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+  .seg{width:28px;height:4px;border-radius:2px;background:var(--border);transition:background 0.3s;cursor:default}
+  .seg.unlocked{background:var(--border2)}
+  .seg.active{background:var(--blue)}
+  .seg-label{font-size:0.6rem;color:var(--text-dim);font-weight:600;letter-spacing:0.06em;margin-left:6px}
+  .player-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.75rem;display:flex;flex-direction:column;gap:1.25rem;align-items:center}
+  .player-wave{display:flex;align-items:flex-end;gap:3px;height:40px}
+  .wave-bar{width:4px;border-radius:2px;background:var(--border2);transition:height 0.1s,background 0.2s}
+  .wave-bar.active{background:var(--blue)}
+  .play-btn{width:64px;height:64px;border-radius:50%;border:2px solid var(--blue);background:var(--blue-glow);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;color:var(--blue);font-size:1.5rem}
+  .play-btn:hover{background:rgba(64,188,244,0.2);transform:scale(1.05)}
+  .play-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none}
+  .play-btn.playing{border-color:var(--orange);color:var(--orange);background:rgba(255,128,0,0.1)}
+  .play-btn.playing:hover{background:rgba(255,128,0,0.18)}
+  .timer-text{font-family:var(--font);font-size:0.75rem;color:var(--text-dim);font-weight:600;letter-spacing:0.08em}
+  .timer-text b{color:var(--blue)}
+  .more-btn{padding:0.6rem 1.25rem;border-radius:var(--radius);cursor:pointer;font-family:var(--font);font-size:0.78rem;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;transition:all 0.15s;border:1px solid var(--blue-dark);background:transparent;color:var(--blue)}
+  .more-btn:hover{background:var(--blue-glow)}
+  .more-btn:disabled{opacity:0.3;cursor:not-allowed}
+  .song-input{flex:1;padding:0.75rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-bright);font-family:var(--font);font-size:0.9rem;outline:none;transition:border-color 0.15s;width:100%}
+  .song-input:focus{border-color:var(--blue-dark)}
+  .song-input.has-sug{border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom-color:transparent}
+  .song-input::placeholder{color:var(--text-dim)}
+  .song-btn{padding:0.75rem 1.25rem;background:var(--blue);border:none;border-radius:var(--radius);color:#000;font-family:var(--font);font-size:0.82rem;font-weight:700;cursor:pointer;transition:all 0.15s;text-transform:uppercase;letter-spacing:0.04em;white-space:nowrap;align-self:flex-start}
+  .song-btn:hover{background:#5acef8}
+  .song-sug{border-color:var(--blue-dark) !important}
+  .song-sug .sug-item:hover,.song-sug .sug-item.focused{background:var(--blue-glow);color:var(--blue)}
+
+  /* ── HISTORY ── */
+  .history-btn{font-size:0.7rem;color:var(--text-dim);cursor:pointer;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;text-decoration:underline;text-underline-offset:3px;background:none;border:none;padding:0}
+  .history-btn:hover{color:var(--text-bright)}
+  .history-grid{display:flex;flex-direction:column;gap:0.5rem;width:100%}
+  .history-row{display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);cursor:pointer;transition:border-color 0.15s}
+  .history-row:hover{border-color:var(--border2)}
+  .history-date{font-size:0.65rem;color:var(--text-dim);font-weight:600;letter-spacing:0.06em;text-transform:uppercase;min-width:60px}
+  .history-info{flex:1}
+  .history-title{font-size:0.88rem;color:var(--text-bright);font-weight:500}
+  .history-sub{font-size:0.7rem;color:var(--text-dim)}
+  .history-pts{font-size:0.8rem;font-weight:700}
+  .history-pts.green{color:var(--green)}
+  .history-pts.blue{color:var(--blue)}
+  .history-pts.dim{color:var(--text-dim)}
+
+
 `;
 
-const HINT_NAMES = ["3ª reseña","2ª reseña","1ª reseña"];
-const POINTS = [3,2,1];
-
-// Highlight matching part of suggestion
+// ════════════════════════════════════════════════════════════
+//  HIGHLIGHT MATCH COMPONENT
+// ════════════════════════════════════════════════════════════
 function HighlightMatch({ text, query }) {
-  const norm = normalize(text);
-  const normQ = normalize(query);
-  const idx = norm.indexOf(normQ);
+  const idx = normalize(text).indexOf(normalize(query));
   if (idx === -1 || !query) return <span>{text}</span>;
-  return (
-    <span>
-      {text.slice(0, idx)}
-      <span className="suggestion-highlight">{text.slice(idx, idx + query.length)}</span>
-      {text.slice(idx + query.length)}
-    </span>
-  );
+  return <span>{text.slice(0,idx)}<span className="sug-hl">{text.slice(idx,idx+query.length)}</span>{text.slice(idx+query.length)}</span>;
 }
 
-export default function App() {
-  const movie = getDailyMovie();
-  const todayKey = getTodayKey();
+// ════════════════════════════════════════════════════════════
+//  YOUTUBE EMBED URL BUILDER
+//  Usamos iframes directos — sin IFrame API JS, sin postMessage issues.
+//  autoplay=1 funciona porque es activado por interacción del usuario
+//  (reemplazamos el src en el click, lo que cuenta como gesto de usuario).
+// ════════════════════════════════════════════════════════════
+function buildEmbedUrl(videoId, startAt, autoplay = 0) {
+  return `https://www.youtube.com/embed/${videoId}?start=${startAt}&autoplay=${autoplay}&controls=0&disablekb=1&fs=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=0`;
+}
 
-  const saved = (() => { try { return JSON.parse(localStorage.getItem("gtf_v2")||"{}"); } catch { return {}; } })();
+// ════════════════════════════════════════════════════════════
+//  LETTERBOXD GAME
+// ════════════════════════════════════════════════════════════
+const LB_HINT_NAMES = ["3ª reseña","2ª reseña","1ª reseña"];
+const LB_POINTS = [3,2,1];
+
+function LetterboxdGame({ onBack }) {
+  const todayKey = getTodayKey();
+  const dayIdx = getDayIndex();
+  const movie = MOVIES[((dayIdx % MOVIES.length) + MOVIES.length) % MOVIES.length];
+
+  const saved = (() => { try { return JSON.parse(localStorage.getItem("gtf_lb")||"{}"); } catch { return {}; } })();
   const alreadyPlayed = saved.date === todayKey;
 
   const [hintLevel, setHintLevel] = useState(0);
@@ -392,70 +454,49 @@ export default function App() {
     return () => clearInterval(id);
   }, [screen]);
 
-  // Close suggestions when clicking outside
   useEffect(() => {
-    function handleClick(e) {
-      if (sugRef.current && !sugRef.current.contains(e.target) && e.target !== inputRef.current) {
-        setSuggestions([]);
-      }
-    }
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
+    function h(e) { if (sugRef.current && !sugRef.current.contains(e.target) && e.target !== inputRef.current) setSuggestions([]); }
+    document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
   }, []);
 
   function persist(sc, hl) {
-    const yesterday = (() => { const d=new Date(); d.setDate(d.getDate()-1); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; })();
-    const newStreak = saved.date === yesterday ? (saved.streak ?? 0) + 1 : 1;
+    const y = (() => { const d=new Date(); d.setDate(d.getDate()-1); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; })();
+    const newStreak = saved.date === y ? (saved.streak ?? 0) + 1 : 1;
     setStreak(newStreak);
-    localStorage.setItem("gtf_v2", JSON.stringify({ date:todayKey, score:sc, hintLevel:hl, streak:newStreak }));
+    // Save to history
+    const hist = (() => { try { return JSON.parse(localStorage.getItem("gtf_lb_hist")||"[]"); } catch { return []; } })();
+    const entry = { date:todayKey, dayIdx, title:movie.title, year:movie.year, director:movie.director, score:sc };
+    const filtered = hist.filter(h => h.date !== todayKey);
+    localStorage.setItem("gtf_lb_hist", JSON.stringify([entry, ...filtered].slice(0,60)));
+    localStorage.setItem("gtf_lb", JSON.stringify({ date:todayKey, score:sc, hintLevel:hl, streak:newStreak }));
   }
 
   const review = movie.reviews.find(r => r.rank === 3 - hintLevel);
 
-  // Cambio 2: compute suggestions as user types
   function handleGuessChange(val) {
-    setGuess(val);
-    setFocusedSug(-1);
+    setGuess(val); setFocusedSug(-1);
     if (val.trim().length < 2) { setSuggestions([]); return; }
-    const normVal = normalize(val);
-    const matches = MOVIES.filter(m => normalize(m.title).includes(normVal)).slice(0, 5);
-    setSuggestions(matches);
+    setSuggestions(MOVIES.filter(m => normalize(m.title).includes(normalize(val))).slice(0,5));
   }
 
   function submitGuess(titleOverride) {
     const value = titleOverride ?? guess;
     if (!value.trim()) return;
     setSuggestions([]);
-
     const hit = normalize(movie.title).includes(normalize(value)) || normalize(value).includes(normalize(movie.title));
-
     if (hit) {
-      const pts = POINTS[hintLevel];
-      setScore(pts);
-      setFeedback("ok");
-      setFeedbackMsg(`¡Correcto! +${pts} ${pts===1?"punto":"puntos"}`);
-      setFlipped(true);
-      setRoundOver(true);
-      persist(pts, hintLevel);
+      const pts = LB_POINTS[hintLevel];
+      setScore(pts); setFeedback("ok"); setFeedbackMsg(`¡Correcto! +${pts} ${pts===1?"punto":"puntos"}`);
+      setFlipped(true); setRoundOver(true); persist(pts, hintLevel);
       setTimeout(() => setScreen("done"), 2000);
     } else {
-      // Cambio 1: wrong answer → advance hint or lose
       if (hintLevel < 2) {
-        setFeedback("fail");
-        setFeedbackMsg("Incorrecto — pasando a la siguiente pista…");
-        setTimeout(() => {
-          setHintLevel(h => h + 1);
-          setFeedback(null);
-          setFeedbackMsg("");
-        }, 1200);
+        setFeedback("fail"); setFeedbackMsg("Incorrecto — pasando a la siguiente pista…");
+        setTimeout(() => { setHintLevel(h => h+1); setFeedback(null); setFeedbackMsg(""); }, 1200);
       } else {
-        // Last hint — game over
-        setFeedback("fail");
-        setFeedbackMsg(`Incorrecto. Era "${movie.title}"`);
-        setFlipped(true);
-        setRoundOver(true);
-        setScore(0);
-        persist(0, hintLevel);
+        setFeedback("fail"); setFeedbackMsg(`Incorrecto. Era "${movie.title}"`);
+        setFlipped(true); setRoundOver(true); setScore(0); persist(0, hintLevel);
         setTimeout(() => setScreen("done"), 2400);
       }
     }
@@ -464,187 +505,502 @@ export default function App() {
 
   function handleGiveUp() {
     setSuggestions([]);
-    setFlipped(true);
-    setScore(0);
-    setRoundOver(true);
-    setFeedback("info");
-    setFeedbackMsg(`La película era "${movie.title}" (${movie.year})`);
+    setFlipped(true); setScore(0); setRoundOver(true);
+    setFeedback("info"); setFeedbackMsg(`La película era "${movie.title}" (${movie.year})`);
     persist(0, hintLevel);
     setTimeout(() => setScreen("done"), 2200);
   }
 
-  // Keyboard navigation for suggestions
   function handleKeyDown(e) {
-    if (suggestions.length === 0) {
-      if (e.key === "Enter") submitGuess();
-      return;
-    }
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setFocusedSug(i => Math.min(i + 1, suggestions.length - 1));
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setFocusedSug(i => Math.max(i - 1, -1));
-    } else if (e.key === "Enter") {
-      e.preventDefault();
-      if (focusedSug >= 0) {
-        submitGuess(suggestions[focusedSug].title);
-      } else {
-        submitGuess();
-      }
-    } else if (e.key === "Escape") {
-      setSuggestions([]);
-    }
+    if (suggestions.length === 0) { if (e.key==="Enter") submitGuess(); return; }
+    if (e.key==="ArrowDown") { e.preventDefault(); setFocusedSug(i => Math.min(i+1,suggestions.length-1)); }
+    else if (e.key==="ArrowUp") { e.preventDefault(); setFocusedSug(i => Math.max(i-1,-1)); }
+    else if (e.key==="Enter") { e.preventDefault(); focusedSug>=0 ? submitGuess(suggestions[focusedSug].title) : submitGuess(); }
+    else if (e.key==="Escape") setSuggestions([]);
   }
 
-  const pad = n => String(n).padStart(2,"0");
+  const hintUsed = score != null && score > 0 ? LB_HINT_NAMES[LB_POINTS.indexOf(score)] : null;
   const today = new Date().toLocaleDateString("es-AR", { weekday:"long", day:"numeric", month:"long" });
   const todayStr = today.charAt(0).toUpperCase() + today.slice(1);
-  const hintUsed = score != null && score > 0 ? HINT_NAMES[POINTS.indexOf(score)] : null;
 
   return (
     <>
-      <style>{css}</style>
+      {screen === "game" && (
+        <div className="main">
+          <div>
+            <p className="header-label">Película del día</p>
+            <h1 className="header-title">¿De qué película es esta reseña?</h1>
+          </div>
+          <div className="pips-row">
+            {[0,1,2].map(i => (
+              <div key={i} className="pip-wrap">
+                <div className={`pip${i===hintLevel?" lit":i<hintLevel?" used":""}`}/>
+                <span className="pip-label">{LB_POINTS[i]}pt</span>
+              </div>
+            ))}
+            <div className="pip-sep"/>
+            <span className="pts-now">Pista actual: <b>{LB_POINTS[hintLevel]} pts</b></span>
+          </div>
+          <div className="scene">
+            <div className={`card-wrap${flipped?" flipped":""}`}>
+              <div className="card-face">
+                <div className="front-body">
+                  <div className="hint-meta">
+                    <div className="hint-tag"><div className="hint-dot"/>{LB_HINT_NAMES[hintLevel]}</div>
+                    <div className="pts-pill"><b>{LB_POINTS[hintLevel]}</b> pts</div>
+                  </div>
+                  <div className="quote-area">
+                    <div className="stars-orange">{movie.stars}</div>
+                    <p className="quote-text">"{review?.text}"</p>
+                    <p className="quote-author">— <span>@{review?.author}</span></p>
+                  </div>
+                  <p className="tap-hint" onClick={handleGiveUp}>Tocar para revelar sin adivinar</p>
+                </div>
+              </div>
+              <div className="card-rear">
+                <div className="rear-icon">🎬</div>
+                <h2 className="rear-title">{movie.title}</h2>
+                <p className="rear-meta">{movie.year} · {movie.director}</p>
+                <div className="rear-stars">{movie.stars}</div>
+              </div>
+            </div>
+          </div>
+          <div className="actions">
+            {feedback && <div className={`toast ${feedback}`}>{feedbackMsg}</div>}
+            {!roundOver && (
+              <>
+                <div className="input-row">
+                  <div className="input-wrap">
+                    <input ref={inputRef} className={`guess-inp${suggestions.length>0?" has-sug":""}`}
+                      placeholder="Escribí el título de la película..."
+                      value={guess} onChange={e => handleGuessChange(e.target.value)}
+                      onKeyDown={handleKeyDown} autoComplete="off" autoCorrect="off" spellCheck="false"/>
+                    {suggestions.length > 0 && (
+                      <div className="suggestions" ref={sugRef}>
+                        {suggestions.map((m,i) => (
+                          <div key={m.id} className={`sug-item${i===focusedSug?" focused":""}`}
+                            onMouseDown={e => { e.preventDefault(); submitGuess(m.title); }}
+                            onMouseEnter={() => setFocusedSug(i)}>
+                            <HighlightMatch text={m.title} query={guess}/>
+                            <span className="sug-year">{m.year}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <button className="guess-btn" onClick={() => submitGuess()}>OK</button>
+                </div>
+                <div className="hint-actions">
+                  <button className="btn-ghost danger" onClick={handleGiveUp}>Rendirse</button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {screen === "done" && (
+        <div className="tomorrow">
+          <div className="tomorrow-icon">{score===3?"🏆":score===2?"⭐":score===1?"✅":"😔"}</div>
+          <h2 className={`tomorrow-title green`}>
+            {score > 0 ? <>¡Adivinaste la película del día!</> : <>No pasa nada,<br/><em>volvé mañana</em></>}
+          </h2>
+          <div className="result-card">
+            <div>
+              <p className="t-label">Película de hoy</p>
+              <p className="t-main-title">{movie.title}</p>
+              <p className="t-meta">{movie.year} · {movie.director} · {movie.stars}</p>
+            </div>
+            <div className="divider"/>
+            <div className="score-row">
+              <span className="score-row-label">{score > 0 ? `Con la ${hintUsed}` : "Sin puntos hoy"}</span>
+              <span className="score-row-val green">{score ?? 0} pts</span>
+            </div>
+            {streak > 1 && <div className="streak-pill"><span>🔥</span><span><b>{streak}</b> días seguidos</span></div>}
+          </div>
+          <div className="countdown-box">
+            <span className="countdown-label">Próxima película en</span>
+            <span className="countdown">{pad(countdown.h)}<span>h</span> {pad(countdown.m)}<span>m</span> {pad(countdown.s)}<span>s</span></span>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+// ════════════════════════════════════════════════════════════
+//  ONE SONG A DAY
+// ════════════════════════════════════════════════════════════
+const MAX_SECONDS = 11;
+const STEP = 2; // seconds added per hint
+
+function SongGame({ onBack }) {
+  const todayKey = getTodayKey();
+  const dayIdx = getDayIndex();
+  // Use a different offset so songs don't align with movies
+  const song = SONGS[((dayIdx + 7) % SONGS.length + SONGS.length) % SONGS.length];
+
+  const saved = (() => { try { return JSON.parse(localStorage.getItem("gtf_song")||"{}"); } catch { return {}; } })();
+  const alreadyPlayed = saved.date === todayKey;
+
+  const [unlockedSecs, setUnlockedSecs] = useState(alreadyPlayed ? (saved.unlockedSecs ?? 1) : 1);
+  const [playing, setPlaying] = useState(false);
+  const [guess, setGuess] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [focusedSug, setFocusedSug] = useState(-1);
+  const [feedback, setFeedback] = useState(null);
+  const [feedbackMsg, setFeedbackMsg] = useState("");
+  const [roundOver, setRoundOver] = useState(alreadyPlayed);
+  const [won, setWon] = useState(alreadyPlayed ? (saved.won ?? false) : false);
+  const [screen, setScreen] = useState(alreadyPlayed ? "done" : "game");
+  const [countdown, setCountdown] = useState(getTimeUntilMidnight());
+  const [streak, setStreak] = useState(saved.streak ?? 0);
+  const [showHistory, setShowHistory] = useState(false);
+  const [waveHeights, setWaveHeights] = useState(Array(20).fill(4));
+  const [iframeSrc, setIframeSrc] = useState("");   // vacío = iframe no cargado
+  const timerRef = useRef(null);
+  const inputRef = useRef(null);
+  const sugRef = useRef(null);
+
+  useEffect(() => {
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+  }, []);
+
+  useEffect(() => {
+    if (screen !== "done") return;
+    const id = setInterval(() => setCountdown(getTimeUntilMidnight()), 1000);
+    return () => clearInterval(id);
+  }, [screen]);
+
+  useEffect(() => {
+    function h(e) { if (sugRef.current && !sugRef.current.contains(e.target) && e.target !== inputRef.current) setSuggestions([]); }
+    document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
+  }, []);
+
+  // Wave animation while playing
+  useEffect(() => {
+    if (!playing) { setWaveHeights(Array(20).fill(4)); return; }
+    const id = setInterval(() => {
+      setWaveHeights(Array(20).fill(0).map(() => 4 + Math.random() * 32));
+    }, 100);
+    return () => clearInterval(id);
+  }, [playing]);
+
+  function handlePlay() {
+    if (timerRef.current) { clearTimeout(timerRef.current); timerRef.current = null; }
+    if (playing) {
+      // Para detener: reemplazamos src con autoplay=0 (recarga sin reproducir)
+      setIframeSrc(buildEmbedUrl(song.videoId, song.startAt, 0));
+      setPlaying(false);
+      return;
+    }
+    // Asignar src con autoplay=1 en el mismo tick del click
+    // Chrome permite autoplay cuando el src change ocurre dentro de un event handler
+    setIframeSrc(buildEmbedUrl(song.videoId, song.startAt, 1));
+    setPlaying(true);
+    timerRef.current = setTimeout(() => {
+      setIframeSrc(buildEmbedUrl(song.videoId, song.startAt, 0));
+      setPlaying(false);
+      timerRef.current = null;
+    }, unlockedSecs * 1000);
+  }
+
+  function stopAudio() {
+    if (timerRef.current) { clearTimeout(timerRef.current); timerRef.current = null; }
+    setIframeSrc(buildEmbedUrl(song.videoId, song.startAt, 0));
+    setPlaying(false);
+  }
+
+  function handleUnlock() {
+    if (unlockedSecs + STEP > MAX_SECONDS) return;
+    stopAudio();
+    setUnlockedSecs(s => s + STEP);
+  }
+
+  function persist(w, secs) {
+    const y = (() => { const d=new Date(); d.setDate(d.getDate()-1); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; })();
+    const newStreak = saved.date === y ? (saved.streak ?? 0) + 1 : 1;
+    setStreak(newStreak);
+    const hist = (() => { try { return JSON.parse(localStorage.getItem("gtf_song_hist")||"[]"); } catch { return []; } })();
+    const entry = { date:todayKey, dayIdx, title:song.title, artist:song.artist, year:song.year, won:w, unlockedSecs:secs };
+    const filtered = hist.filter(h => h.date !== todayKey);
+    localStorage.setItem("gtf_song_hist", JSON.stringify([entry, ...filtered].slice(0,60)));
+    localStorage.setItem("gtf_song", JSON.stringify({ date:todayKey, won:w, unlockedSecs:secs, streak:newStreak }));
+  }
+
+  function handleGuessChange(val) {
+    setGuess(val); setFocusedSug(-1);
+    if (val.trim().length < 2) { setSuggestions([]); return; }
+    const matches = SONGS.filter(s =>
+      normalize(s.title).includes(normalize(val)) || normalize(s.artist).includes(normalize(val))
+    ).slice(0,5);
+    setSuggestions(matches);
+  }
+
+  function submitGuess(titleOverride) {
+    const value = titleOverride ?? guess;
+    if (!value.trim()) return;
+    setSuggestions([]); stopAudio();
+    const hit = normalize(song.title).includes(normalize(value)) || normalize(value).includes(normalize(song.title));
+    if (hit) {
+      setWon(true); setRoundOver(true);
+      setFeedback("ok"); setFeedbackMsg(`¡Correcto! Adivinaste con ${unlockedSecs}s`);
+      persist(true, unlockedSecs);
+      setTimeout(() => setScreen("done"), 2000);
+    } else {
+      if (unlockedSecs < MAX_SECONDS) {
+        setFeedback("fail"); setFeedbackMsg("Incorrecto — se desbloquean 2 segundos más…");
+        setTimeout(() => { setUnlockedSecs(s => Math.min(s + STEP, MAX_SECONDS)); setFeedback(null); }, 1200);
+      } else {
+        setFeedback("fail"); setFeedbackMsg(`Incorrecto. Era "${song.title}" de ${song.artist}`);
+        setRoundOver(true); persist(false, unlockedSecs);
+        setTimeout(() => setScreen("done"), 2400);
+      }
+    }
+    setGuess("");
+  }
+
+  function handleGiveUp() {
+    setSuggestions([]); stopAudio();
+    setRoundOver(true); persist(false, unlockedSecs);
+    setFeedback("info"); setFeedbackMsg(`Era "${song.title}" de ${song.artist}`);
+    setTimeout(() => setScreen("done"), 2200);
+  }
+
+  function handleKeyDown(e) {
+    if (suggestions.length===0) { if (e.key==="Enter") submitGuess(); return; }
+    if (e.key==="ArrowDown") { e.preventDefault(); setFocusedSug(i => Math.min(i+1,suggestions.length-1)); }
+    else if (e.key==="ArrowUp") { e.preventDefault(); setFocusedSug(i => Math.max(i-1,-1)); }
+    else if (e.key==="Enter") { e.preventDefault(); focusedSug>=0 ? submitGuess(suggestions[focusedSug].title) : submitGuess(); }
+    else if (e.key==="Escape") setSuggestions([]);
+  }
+
+  // Segments: 1,3,5,7,9,11 — 6 segments
+  const totalSegments = Math.ceil((MAX_SECONDS - 1) / STEP) + 1; // 1,3,5,7,9,11 = 6
+  const segSeconds = [1,3,5,7,9,11];
+
+  const history = (() => { try { return JSON.parse(localStorage.getItem("gtf_song_hist")||"[]"); } catch { return []; } })();
+
+  if (showHistory) {
+    return (
+      <div className="main">
+        <div>
+          <p className="header-label">Historial</p>
+          <h1 className="header-title">One Song a Day — canciones pasadas</h1>
+        </div>
+        {history.length === 0
+          ? <p style={{color:"var(--text-dim)",fontSize:"0.85rem"}}>Todavía no hay canciones jugadas.</p>
+          : <div className="history-grid">
+              {history.map((h,i) => (
+                <div key={i} className="history-row">
+                  <span className="history-date">{h.date}</span>
+                  <div className="history-info">
+                    <div className="history-title">{h.title}</div>
+                    <div className="history-sub">{h.artist} · {h.year}</div>
+                  </div>
+                  <span className={`history-pts ${h.won?"blue":"dim"}`}>
+                    {h.won ? `✓ ${h.unlockedSecs}s` : "✗"}
+                  </span>
+                </div>
+              ))}
+            </div>
+        }
+        <button className="btn-ghost" onClick={() => setShowHistory(false)} style={{alignSelf:"center"}}>← Volver</button>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {screen === "game" && (
+        <div className="main">
+          <div className="song-header">
+            <p className="header-label">Canción del día</p>
+            <h1 className="header-title">¿De qué canción es este fragmento?</h1>
+          </div>
+
+          {/* Segment progress */}
+          <div className="song-progress-row">
+            {segSeconds.map(s => (
+              <div key={s} className={`seg${s<=unlockedSecs?" unlocked":""}${s===unlockedSecs?" active":""}`}/>
+            ))}
+            <span className="seg-label">{unlockedSecs}s desbloqueados</span>
+          </div>
+
+          {/* Player — iframe con src dinámico. autoplay=1 en el src es permitido
+               porque el cambio ocurre dentro del onClick (gesto de usuario) */}
+          <div className="player-card">
+            {iframeSrc && (
+              <iframe
+                src={iframeSrc}
+                style={{position:"absolute",top:-9999,left:-9999,width:320,height:180}}
+                allow="autoplay; encrypted-media"
+                allowFullScreen={false}
+                title="yt-audio"
+              />
+            )}
+            <div className="player-wave">
+              {waveHeights.map((h,i) => (
+                <div key={i} className={`wave-bar${playing?" active":""}`} style={{height:`${h}px`}}/>
+              ))}
+            </div>
+            <button className={`play-btn${playing?" playing":""}`} onClick={handlePlay}>
+              {playing ? "■" : "▶"}
+            </button>
+            <span className="timer-text">
+              <b>{unlockedSecs}</b> segundo{unlockedSecs!==1?"s":""} · podés reproducirla las veces que quieras
+            </span>
+          </div>
+
+          <div className="actions">
+            {feedback && <div className={`toast ${feedback}`}>{feedbackMsg}</div>}
+            {!roundOver && (
+              <>
+                <div className="input-row">
+                  <div className="input-wrap">
+                    <input ref={inputRef} className={`song-input${suggestions.length>0?" has-sug":""}`}
+                      placeholder="Escribí el título de la canción o el artista..."
+                      value={guess} onChange={e => handleGuessChange(e.target.value)}
+                      onKeyDown={handleKeyDown} autoComplete="off" autoCorrect="off" spellCheck="false"/>
+                    {suggestions.length > 0 && (
+                      <div className="suggestions song-sug" ref={sugRef}>
+                        {suggestions.map((s,i) => (
+                          <div key={s.id} className={`sug-item${i===focusedSug?" focused":""}`}
+                            onMouseDown={e => { e.preventDefault(); submitGuess(s.title); }}
+                            onMouseEnter={() => setFocusedSug(i)}>
+                            <span>
+                              <HighlightMatch text={s.title} query={guess}/>
+                              <span style={{color:"var(--text-dim)",fontSize:"0.78rem",marginLeft:"0.4rem"}}>— {s.artist}</span>
+                            </span>
+                            <span className="sug-year">{s.year}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <button className="song-btn" onClick={() => submitGuess()}>OK</button>
+                </div>
+                <div className="hint-actions">
+                  {unlockedSecs < MAX_SECONDS && (
+                    <button className="more-btn" onClick={handleUnlock}>
+                      +{STEP}s más →
+                    </button>
+                  )}
+                  <button className="btn-ghost danger" onClick={handleGiveUp}>Rendirse</button>
+                </div>
+              </>
+            )}
+          </div>
+
+          <button className="history-btn" onClick={() => setShowHistory(true)}>Ver canciones pasadas →</button>
+        </div>
+      )}
+
+      {screen === "done" && (
+        <div className="tomorrow">
+          <div className="tomorrow-icon">{won ? "🎵" : "😔"}</div>
+          <h2 className="tomorrow-title blue">
+            {won ? <>¡Adivinaste la canción del día!</> : <>No pasa nada,<br/><em>volvé mañana</em></>}
+          </h2>
+          <div className="result-card">
+            <div>
+              <p className="t-label">Canción de hoy</p>
+              <p className="t-main-title">{song.title}</p>
+              <p className="t-meta">{song.artist} · {song.year}</p>
+            </div>
+            <div className="divider"/>
+            <div className="score-row">
+              <span className="score-row-label">{won ? `Adivinaste con ${unlockedSecs} segundo${unlockedSecs!==1?"s":""}` : "No adivinada hoy"}</span>
+              <span className={`score-row-val ${won?"blue":"dim"}`}>{won ? `${unlockedSecs}s` : "—"}</span>
+            </div>
+            {streak > 1 && <div className="streak-pill"><span>🔥</span><span><b>{streak}</b> días seguidos</span></div>}
+          </div>
+          <div className="countdown-box">
+            <span className="countdown-label">Próxima canción en</span>
+            <span className="countdown">{pad(countdown.h)}<span>h</span> {pad(countdown.m)}<span>m</span> {pad(countdown.s)}<span>s</span></span>
+          </div>
+          <button className="history-btn" onClick={() => setShowHistory(true)}>Ver canciones pasadas →</button>
+        </div>
+      )}
+    </>
+  );
+}
+
+// ════════════════════════════════════════════════════════════
+//  HOME SCREEN
+// ════════════════════════════════════════════════════════════
+function HomeScreen({ onSelect }) {
+  const lbSaved = (() => { try { return JSON.parse(localStorage.getItem("gtf_lb")||"{}"); } catch { return {}; } })();
+  const songSaved = (() => { try { return JSON.parse(localStorage.getItem("gtf_song")||"{}"); } catch { return {}; } })();
+  const todayKey = getTodayKey();
+  const lbDone = lbSaved.date === todayKey;
+  const songDone = songSaved.date === todayKey;
+
+  return (
+    <div className="home">
+      <div className="home-hero">
+        <div className="nav-dots" style={{marginBottom:"0.5rem"}}>
+          <div className="nav-dot"/><div className="nav-dot"/><div className="nav-dot"/>
+        </div>
+        <h1 className="home-title">Daily Games</h1>
+        <p className="home-sub">Una partida por día · Volvé mañana</p>
+      </div>
+      <div className="home-cards">
+        <div className="home-card green" onClick={() => onSelect("lb")}>
+          <div className="home-card-icon">🎬</div>
+          <div className="home-card-name">Guess the Film</div>
+          <div className="home-card-desc">Tres reseñas de Letterboxd. Adiviná la película antes de quedarte sin pistas.</div>
+          <div className="home-card-badge">
+            <div className="badge-dot"/>
+            {lbDone ? "✓ Ya jugaste hoy" : "Jugar ahora"}
+          </div>
+        </div>
+        <div className="home-card blue" onClick={() => onSelect("song")}>
+          <div className="home-card-icon">🎵</div>
+          <div className="home-card-name">One Song a Day</div>
+          <div className="home-card-desc">Escuchá el primer segundo de una canción. Pedí más tiempo si no la reconocés.</div>
+          <div className="home-card-badge">
+            <div className="badge-dot"/>
+            {songDone ? "✓ Ya jugaste hoy" : "Jugar ahora"}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════
+//  ROOT APP
+// ════════════════════════════════════════════════════════════
+export default function App() {
+  const [view, setView] = useState("home"); // "home" | "lb" | "song"
+
+  const today = new Date().toLocaleDateString("es-AR", { weekday:"long", day:"numeric", month:"long" });
+  const todayStr = today.charAt(0).toUpperCase() + today.slice(1);
+
+  return (
+    <>
+      <style>{GLOBAL_CSS}</style>
       <div className="app">
         <nav className="nav">
-          <div className="nav-brand">
+          <div className="nav-brand" onClick={() => setView("home")}>
             <div className="nav-dots">
               <div className="nav-dot"/><div className="nav-dot"/><div className="nav-dot"/>
             </div>
-            <span className="nav-title">Guess the Film</span>
+            <span className="nav-title">Daily Games</span>
           </div>
-          <span className="nav-date">{todayStr}</span>
+          <div className="nav-right">
+            <span className="nav-date">{todayStr}</span>
+            {view !== "home" && (
+              <button className="nav-back" onClick={() => setView("home")}>← Inicio</button>
+            )}
+          </div>
         </nav>
 
-        {screen === "game" && (
-          <div className="main">
-            <div>
-              <p className="header-label">Película del día</p>
-              <h1 className="header-title">¿De qué película es esta reseña?</h1>
-            </div>
-
-            <div className="pips-row">
-              {[0,1,2].map(i => (
-                <div key={i} className="pip-wrap">
-                  <div className={`pip${i === hintLevel ? " lit" : i < hintLevel ? " used" : ""}`}/>
-                  <span className="pip-label">{POINTS[i]}pt</span>
-                </div>
-              ))}
-              <div className="pip-sep"/>
-              <span className="pts-now">Pista actual: <b>{POINTS[hintLevel]} pts</b></span>
-            </div>
-
-            <div className="scene">
-              <div className={`card-wrap${flipped?" flipped":""}`}>
-                <div className="card-face">
-                  <div className="front-body">
-                    <div className="hint-meta">
-                      <div className="hint-tag"><div className="hint-dot"/>{HINT_NAMES[hintLevel]}</div>
-                      <div className="pts-pill"><b>{POINTS[hintLevel]}</b> pts</div>
-                    </div>
-                    <div className="quote-area">
-                      <div className="stars">{movie.stars}</div>
-                      <p className="quote-text">"{review?.text}"</p>
-                      <p className="quote-author">— <span>@{review?.author}</span></p>
-                    </div>
-                    <p className="tap-hint" onClick={handleGiveUp}>Tocar para revelar sin adivinar</p>
-                  </div>
-                </div>
-                <div className="card-rear">
-                  <div className="rear-icon">🎬</div>
-                  <h2 className="rear-title">{movie.title}</h2>
-                  <p className="rear-meta">{movie.year} · {movie.director}</p>
-                  <div className="rear-stars">{movie.stars}</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="actions">
-              {feedback && <div className={`toast ${feedback}`}>{feedbackMsg}</div>}
-              {!roundOver && (
-                <>
-                  {/* Cambio 2: input with autocomplete */}
-                  <div className="input-row">
-                    <div className="input-wrap">
-                      <input
-                        ref={inputRef}
-                        className={`guess-inp${suggestions.length > 0 ? " has-suggestions" : ""}`}
-                        placeholder="Escribí el título de la película..."
-                        value={guess}
-                        onChange={e => handleGuessChange(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                        autoComplete="off"
-                        autoCorrect="off"
-                        spellCheck="false"
-                      />
-                      {suggestions.length > 0 && (
-                        <div className="suggestions" ref={sugRef}>
-                          {suggestions.map((m, i) => (
-                            <div
-                              key={m.id}
-                              className={`suggestion-item${i === focusedSug ? " focused" : ""}`}
-                              onMouseDown={e => { e.preventDefault(); submitGuess(m.title); }}
-                              onMouseEnter={() => setFocusedSug(i)}
-                            >
-                              <HighlightMatch text={m.title} query={guess} />
-                              <span className="suggestion-year">{m.year}</span>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                    <button className="guess-btn" onClick={() => submitGuess()}>OK</button>
-                  </div>
-                  <div className="hint-actions">
-                    <button className="btn-ghost danger" onClick={handleGiveUp}>Rendirse</button>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-        )}
-
-        {screen === "done" && (
-          <div className="tomorrow">
-            <div className="tomorrow-icon">
-              {score===3?"🏆":score===2?"⭐":score===1?"✅":"😔"}
-            </div>
-            <h2 className="tomorrow-title">
-              {score > 0
-                ? <>¡Adivinaste la película del día!</>
-                : <>No pasa nada,<br/><em>volvé mañana</em></>
-              }
-            </h2>
-
-            <div className="tomorrow-card">
-              <div>
-                <p className="t-label">Película de hoy</p>
-                <p className="t-movie-title">{movie.title}</p>
-                <p className="t-movie-meta">{movie.year} · {movie.director} · {movie.stars}</p>
-              </div>
-              <div className="divider"/>
-              <div className="score-row">
-                <span className="score-row-label">
-                  {score > 0 ? `Adivinaste con la ${hintUsed}` : "Sin puntos hoy"}
-                </span>
-                <span className="score-row-val">{score ?? 0} pts</span>
-              </div>
-              {streak > 1 && (
-                <div className="streak-pill">
-                  <span>🔥</span>
-                  <span><b>{streak}</b> días seguidos</span>
-                </div>
-              )}
-            </div>
-
-            <div className="countdown-box">
-              <span className="countdown-label">Próxima película en</span>
-              <span className="countdown">
-                {pad(countdown.h)}<span>h</span> {pad(countdown.m)}<span>m</span> {pad(countdown.s)}<span>s</span>
-              </span>
-            </div>
-          </div>
-        )}
+        {view === "home" && <HomeScreen onSelect={setView}/>}
+        {view === "lb"   && <LetterboxdGame onBack={() => setView("home")}/>}
+        {view === "song" && <SongGame onBack={() => setView("home")}/>}
       </div>
     </>
   );
