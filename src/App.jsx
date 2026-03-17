@@ -154,12 +154,12 @@ const SONGS = [
   // ── Arctic Monkeys ──
   
   { id:13, title:"Ready to Start",                 artist:"Arcade Fire",       year:2010, audioUrl:"/songs/ready-to-start.mp3"            },
-  { id:1, title:"Champagne Supernova",                 artist:"Arcade Fire",       year:2010, audioUrl:"/songs/Champagne Supernova.mp3"            },
-  { id:2, title:"Come As You Are",                 artist:"Arcade Fire",       year:2010, audioUrl:"/songs/Come As You Are.mp3"            },
-  { id:3, title:"Creep",                 artist:"Arcade Fire",       year:2010, audioUrl:"/songs/Creep.mp3"            },
-  { id:4, title:"Don't Look Back in Anger",                 artist:"Arcade Fire",       year:2010, audioUrl:"/songs/Don't Look Back in Anger.mp3"            },
-  { id:5, title:"Friday I'm in Love",                 artist:"Arcade Fire",       year:2010, audioUrl:"/songs/Friday I'm in Love.mp3"            },
-  { id:5, title:"Karma Police",                 artist:"Arcade Fire",       year:2010, audioUrl:"/songs/Karma Police.mp3"            },
+  { id:1, title:"Champagne Supernova",                 artist:"Oasis",       year:2010, audioUrl:"/songs/Champagne Supernova.mp3"            },
+  { id:2, title:"Come As You Are",                 artist:"Nirvana",       year:2010, audioUrl:"/songs/Come As You Are.mp3"            },
+  { id:3, title:"Creep",                 artist:"Radiohead",       year:2010, audioUrl:"/songs/Creep.mp3"            },
+  { id:4, title:"Don't Look Back in Anger",                 artist:"Oasis",       year:2010, audioUrl:"/songs/Don't Look Back in Anger.mp3"            },
+  { id:5, title:"Friday I'm in Love",                 artist:"The Cure",       year:2010, audioUrl:"/songs/Friday I'm in Love.mp3"            },
+  { id:5, title:"Karma Police",                 artist:"Radiohead",       year:2010, audioUrl:"/songs/Karma Police.mp3"            },
   // ── Nirvana ──
   
 ];
