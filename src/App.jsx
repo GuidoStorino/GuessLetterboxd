@@ -145,70 +145,23 @@ const MOVIES = [
 ];
 
 // ════════════════════════════════════════════════════════════
-//  SONGS DATA  — videoId = YouTube video ID, startAt = second to begin from
+//  SONGS DATA
+//  audioUrl: ruta al archivo en /public/songs/
+//  Los MP3 deben ser clips de 11 segundos máximo.
+//  Naming sugerido: kebab-case del título, ej: "do-i-wanna-know.mp3"
 // ════════════════════════════════════════════════════════════
-// Género: indie/rock alternativo 2000s-2010s · Dificultad: media
-// Nota: si un videoId deja de funcionar (video eliminado/bloqueado),
-// buscá el video oficial en YouTube y reemplazá los 11 caracteres de la URL.
 const SONGS = [
   // ── Arctic Monkeys ──
-  { id:1,  title:"Do I Wanna Know?",          artist:"Arctic Monkeys",   year:2013, videoId:"bpOSxM0MfDA", startAt:0  },
-  { id:2,  title:"R U Mine?",                 artist:"Arctic Monkeys",   year:2012, videoId:"sBmNp9kgOhQ", startAt:0  },
-  { id:3,  title:"505",                       artist:"Arctic Monkeys",   year:2007, videoId:"XOyyAMFSICQ", startAt:0  },
-  { id:4,  title:"Fluorescent Adolescent",    artist:"Arctic Monkeys",   year:2011, videoId:"_LyOoZeGIKk", startAt:0  },
-  // ── The Strokes ──
-  { id:5,  title:"Last Nite",                 artist:"The Strokes",      year:2001, videoId:"TOypSnKFHnI", startAt:0  },
-  { id:6,  title:"Reptilia",                  artist:"The Strokes",      year:2003, videoId:"XzFMGA3Mhqg", startAt:0  },
-  { id:7,  title:"Someday",                   artist:"The Strokes",      year:2001, videoId:"4NtYlHOgNJU", startAt:0  },
-  // ── Radiohead ──
-  { id:8,  title:"Karma Police",              artist:"Radiohead",        year:1997, videoId:"1uYWYWPc9HU", startAt:0  },
-  { id:9,  title:"Creep",                     artist:"Radiohead",        year:1992, videoId:"XFkzRNyygfk", startAt:0  },
-  { id:10, title:"Fake Plastic Trees",        artist:"Radiohead",        year:1995, videoId:"n5hP9WTKM4A", startAt:0  },
-  // ── Arcade Fire ──
-  { id:11, title:"Wake Up",                   artist:"Arcade Fire",      year:2004, videoId:"hinPSUMFAWA", startAt:0  },
-  { id:12, title:"Rebellion (Lies)",          artist:"Arcade Fire",      year:2004, videoId:"X3RiJoV2g1c", startAt:0  },
-  { id:13, title:"Ready to Start",            artist:"Arcade Fire",      year:2010, videoId:"q5EcLJV9xH4", startAt:0  },
+  
+  { id:13, title:"Ready to Start",                 artist:"Arcade Fire",       year:2010, audioUrl:"/songs/ready-to-start.mp3"            },
+  { id:1, title:"Champagne Supernova",                 artist:"Arcade Fire",       year:2010, audioUrl:"/songs/Champagne Supernova.mp3"            },
+  { id:2, title:"Come As You Are",                 artist:"Arcade Fire",       year:2010, audioUrl:"/songs/Come As You Are.mp3"            },
+  { id:3, title:"Creep",                 artist:"Arcade Fire",       year:2010, audioUrl:"/songs/Creep.mp3"            },
+  { id:4, title:"Don't Look Back in Anger",                 artist:"Arcade Fire",       year:2010, audioUrl:"/songs/Don't Look Back in Anger.mp3"            },
+  { id:5, title:"Friday I'm in Love",                 artist:"Arcade Fire",       year:2010, audioUrl:"/songs/Friday I'm in Love.mp3"            },
+  { id:5, title:"Karma Police",                 artist:"Arcade Fire",       year:2010, audioUrl:"/songs/Karma Police.mp3"            },
   // ── Nirvana ──
-  { id:14, title:"Come as You Are",           artist:"Nirvana",          year:1991, videoId:"vabnZ9-ex7o", startAt:0  },
-  { id:15, title:"In Bloom",                  artist:"Nirvana",          year:1991, videoId:"PbgKEjNBHqM", startAt:0  },
-  { id:16, title:"The Man Who Sold the World",artist:"Nirvana",          year:1994, videoId:"swpHPiAWmEo", startAt:0  },
-  // ── Oasis ──
-  { id:17, title:"Champagne Supernova",       artist:"Oasis",            year:1995, videoId:"tI-5uv4wryI", startAt:0  },
-  { id:18, title:"Don't Look Back in Anger",  artist:"Oasis",            year:1996, videoId:"r8OipmKFDeM", startAt:0  },
-  { id:19, title:"Half the World Away",       artist:"Oasis",            year:1994, videoId:"j8hEMDCE_q4", startAt:0  },
-  // ── The Cure ──
-  { id:20, title:"Friday I'm in Love",        artist:"The Cure",         year:1992, videoId:"mGgMZpGYiy8", startAt:0  },
-  { id:21, title:"Lovesong",                  artist:"The Cure",         year:1989, videoId:"3-lBEPGFDHo", startAt:0  },
-  // ── Interpol ──
-  { id:22, title:"Obstacle 1",               artist:"Interpol",          year:2002, videoId:"XsxuONy8TbI", startAt:0  },
-  { id:23, title:"Slow Hands",               artist:"Interpol",          year:2002, videoId:"U9lECvtKBGs", startAt:0  },
-  // ── The National ──
-  { id:24, title:"Bloodbuzz Ohio",            artist:"The National",     year:2010, videoId:"Q3Kvu6Kgp88", startAt:0  },
-  { id:25, title:"Sorrow",                    artist:"The National",     year:2010, videoId:"h-OONlVqEGo", startAt:0  },
-  // ── Neutral Milk Hotel / Indie clásico ──
-  { id:26, title:"Holland, 1945",             artist:"Neutral Milk Hotel",year:1998, videoId:"LRkSK7JFZS8", startAt:0  },
-  // ── LCD Soundsystem ──
-  { id:27, title:"All My Friends",            artist:"LCD Soundsystem",  year:2007, videoId:"3lPgLng5RIE", startAt:0  },
-  { id:28, title:"Someone Great",             artist:"LCD Soundsystem",  year:2007, videoId:"nEjbBBDfv-k", startAt:0  },
-  // ── Vampire Weekend ──
-  { id:29, title:"A-Punk",                    artist:"Vampire Weekend",  year:2008, videoId:"_XC2xnGBwBo", startAt:0  },
-  { id:30, title:"Oxford Comma",              artist:"Vampire Weekend",  year:2008, videoId:"P_zkMeFHbpI", startAt:0  },
-  // ── Pixies ──
-  { id:31, title:"Where Is My Mind?",         artist:"Pixies",           year:1988, videoId:"GGc9TgCOrHs", startAt:0  },
-  { id:32, title:"Here Comes Your Man",       artist:"Pixies",           year:1989, videoId:"8RrWvS5pBz8", startAt:0  },
-  // ── Wilco ──
-  { id:33, title:"Jesus, Etc.",               artist:"Wilco",            year:2001, videoId:"4fHw4GeW3EU", startAt:0  },
-  // ── Bon Iver ──
-  { id:34, title:"Skinny Love",               artist:"Bon Iver",         year:2007, videoId:"ssdgB-XKMgA", startAt:0  },
-  { id:35, title:"Holocene",                  artist:"Bon Iver",         year:2011, videoId:"TWcyIpul8OE", startAt:0  },
-  // ── Fleet Foxes ──
-  { id:36, title:"White Winter Hymnal",       artist:"Fleet Foxes",      year:2008, videoId:"KmFUnrFThgk", startAt:0  },
-  { id:37, title:"Mykonos",                   artist:"Fleet Foxes",      year:2009, videoId:"3EDnMOfMGcA", startAt:0  },
-  // ── The War on Drugs ──
-  { id:38, title:"Red Eyes",                  artist:"The War on Drugs",  year:2014, videoId:"rT9yRGHoWJ8", startAt:0  },
-  // ── Tame Impala ──
-  { id:39, title:"Feels Like We Only Go Backwards", artist:"Tame Impala", year:2012, videoId:"4-MBGtJlwGQ", startAt:0  },
-  { id:40, title:"Let It Happen",             artist:"Tame Impala",      year:2015, videoId:"pFptt7Cargc", startAt:0  },
+  
 ];
 
 // ════════════════════════════════════════════════════════════
@@ -410,14 +363,9 @@ function HighlightMatch({ text, query }) {
 }
 
 // ════════════════════════════════════════════════════════════
-//  YOUTUBE EMBED URL BUILDER
-//  Usamos iframes directos — sin IFrame API JS, sin postMessage issues.
-//  autoplay=1 funciona porque es activado por interacción del usuario
-//  (reemplazamos el src en el click, lo que cuenta como gesto de usuario).
+//  AUDIO — usa Web Audio API nativa con archivos MP3 en /public/songs/
+//  Naming convention: el campo audioUrl de cada canción apunta a /songs/nombre.mp3
 // ════════════════════════════════════════════════════════════
-function buildEmbedUrl(videoId, startAt, autoplay = 0) {
-  return `https://www.youtube.com/embed/${videoId}?start=${startAt}&autoplay=${autoplay}&controls=0&disablekb=1&fs=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=0`;
-}
 
 // ════════════════════════════════════════════════════════════
 //  LETTERBOXD GAME
@@ -657,7 +605,7 @@ function SongGame({ onBack }) {
   const [streak, setStreak] = useState(saved.streak ?? 0);
   const [showHistory, setShowHistory] = useState(false);
   const [waveHeights, setWaveHeights] = useState(Array(20).fill(4));
-  const [iframeSrc, setIframeSrc] = useState("");   // vacío = iframe no cargado
+  const audioRef = useRef(null);
   const timerRef = useRef(null);
   const inputRef = useRef(null);
   const sugRef = useRef(null);
@@ -688,27 +636,29 @@ function SongGame({ onBack }) {
   }, [playing]);
 
   function handlePlay() {
+    const audio = audioRef.current;
+    if (!audio) return;
     if (timerRef.current) { clearTimeout(timerRef.current); timerRef.current = null; }
     if (playing) {
-      // Para detener: reemplazamos src con autoplay=0 (recarga sin reproducir)
-      setIframeSrc(buildEmbedUrl(song.videoId, song.startAt, 0));
+      audio.pause();
       setPlaying(false);
       return;
     }
-    // Asignar src con autoplay=1 en el mismo tick del click
-    // Chrome permite autoplay cuando el src change ocurre dentro de un event handler
-    setIframeSrc(buildEmbedUrl(song.videoId, song.startAt, 1));
+    audio.currentTime = 0;
+    audio.play().catch(e => console.warn("play() blocked:", e));
     setPlaying(true);
     timerRef.current = setTimeout(() => {
-      setIframeSrc(buildEmbedUrl(song.videoId, song.startAt, 0));
+      audio.pause();
+      audio.currentTime = 0;
       setPlaying(false);
       timerRef.current = null;
     }, unlockedSecs * 1000);
   }
 
   function stopAudio() {
+    const audio = audioRef.current;
     if (timerRef.current) { clearTimeout(timerRef.current); timerRef.current = null; }
-    setIframeSrc(buildEmbedUrl(song.videoId, song.startAt, 0));
+    if (audio) { audio.pause(); audio.currentTime = 0; }
     setPlaying(false);
   }
 
@@ -828,18 +778,9 @@ function SongGame({ onBack }) {
             <span className="seg-label">{unlockedSecs}s desbloqueados</span>
           </div>
 
-          {/* Player — iframe con src dinámico. autoplay=1 en el src es permitido
-               porque el cambio ocurre dentro del onClick (gesto de usuario) */}
+          {/* Player — <audio> nativo, sin dependencias externas */}
           <div className="player-card">
-            {iframeSrc && (
-              <iframe
-                src={iframeSrc}
-                style={{position:"absolute",top:-9999,left:-9999,width:320,height:180}}
-                allow="autoplay; encrypted-media"
-                allowFullScreen={false}
-                title="yt-audio"
-              />
-            )}
+            <audio ref={audioRef} src={song.audioUrl} preload="auto"/>
             <div className="player-wave">
               {waveHeights.map((h,i) => (
                 <div key={i} className={`wave-bar${playing?" active":""}`} style={{height:`${h}px`}}/>
