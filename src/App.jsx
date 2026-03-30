@@ -23,6 +23,26 @@ function getTimeUntilMidnight() {
 }
 const pad = n => String(n).padStart(2,"0");
 
+function dayIndexToKey(idx) {
+  const d = new Date(2024, 0, 1);
+  d.setDate(d.getDate() + idx);
+  return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+}
+function dayIndexToLabel(idx) {
+  const d = new Date(2024, 0, 1);
+  d.setDate(d.getDate() + idx);
+  return d.toLocaleDateString("es-AR", { weekday:"short", day:"numeric", month:"short" });
+}
+function getPastDays(todayIdx, n = 30) {
+  const days = [];
+  for (let i = 1; i <= n; i++) {
+    const idx = todayIdx - i;
+    if (idx < 0) break;
+    days.push({ dayIdx: idx, key: dayIndexToKey(idx), label: dayIndexToLabel(idx) });
+  }
+  return days;
+}
+
 // ════════════════════════════════════════════════════════════
 //  MOVIES DATA
 // ════════════════════════════════════════════════════════════
@@ -152,16 +172,97 @@ const MOVIES = [
 // ════════════════════════════════════════════════════════════
 const SONGS = [
   // ── Arctic Monkeys ──
-  
-  { id:13, title:"Ready to Start",                 artist:"Arcade Fire",       year:2010, audioUrl:"/songs/ready-to-start.mp3"            },
-  { id:1, title:"Champagne Supernova",                 artist:"Oasis",       year:2010, audioUrl:"/songs/Champagne Supernova.mp3"            },
-  { id:2, title:"Come As You Are",                 artist:"Nirvana",       year:2010, audioUrl:"/songs/Come As You Are.mp3"            },
-  { id:3, title:"Creep",                 artist:"Radiohead",       year:2010, audioUrl:"/songs/Creep.mp3"            },
-  { id:4, title:"Don't Look Back in Anger",                 artist:"Oasis",       year:2010, audioUrl:"/songs/Don't Look Back in Anger.mp3"            },
-  { id:5, title:"Friday I'm in Love",                 artist:"The Cure",       year:2010, audioUrl:"/songs/Friday I'm in Love.mp3"            },
-  { id:5, title:"Karma Police",                 artist:"Radiohead",       year:2010, audioUrl:"/songs/Karma Police.mp3"            },
-  // ── Nirvana ──
-  
+  { id:1,  title:"Do I Wanna Know?",               artist:"Arctic Monkeys",    year:2013, audioUrl:"/songs/do-i-wanna-know.mp3"          },
+{ id:2, title:"Acquiesce", artist:"oasis", year:null, audioUrl:"/songs/acquiesce.mp3" },
+{ id:3, title:"All Around the World", artist:"Oasis", year:null, audioUrl:"/songs/allaroundtheworld.mp3" },
+{ id:4, title:"All I Want is You", artist:"U2", year:null, audioUrl:"/songs/alliwantisyou.mp3" },
+{ id:5, title:"Bang and Blame", artist:"REM", year:null, audioUrl:"/songs/bangandblame.mp3" },
+{ id:6, title:"Bar Italia", artist:"Pulp", year:null, audioUrl:"/songs/baritalia.mp3" },
+{ id:7, title:"Beetlebum", artist:"Blur", year:null, audioUrl:"/songs/beetlebum.mp3" },
+{ id:8, title:"Bigmouth Strikes Again", artist:"The Smiths", year:null, audioUrl:"/songs/bigmouthstrikesagain.mp3" },
+{ id:9, title:"Bittersweet Symphony", artist:"The Verve", year:null, audioUrl:"/songs/bittersweetsymphony.mp3" },
+{ id:10, title:"Black Hole Sun", artist:"Soundgarden", year:null, audioUrl:"/songs/blackholesun.mp3" },
+{ id:11, title:"Blue Monday", artist:"New Order", year:null, audioUrl:"/songs/bluemonday.mp3" },
+{ id:12, title:"Blue Pacific Ocean", artist:"The Verve", year:null, audioUrl:"/songs/bluepacificocean.mp3" },
+{ id:13, title:"Charmless Man", artist:"Blur", year:null, audioUrl:"/songs/charmlessman.mp3" },
+{ id:14, title:"China Girl", artist:"David Bowie", year:null, audioUrl:"/songs/chinagirl.mp3" },
+{ id:15, title:"Common People", artist:"Pulp", year:null, audioUrl:"/songs/commonpeople.mp3" },
+{ id:16, title:"Dakota", artist:"Stereophonics", year:null, audioUrl:"/songs/dakota.mp3" },
+{ id:17, title:"Disorder", artist:"Joy Division", year:null, audioUrl:"/songs/disorder.mp3" },
+{ id:18, title:"Dreams", artist:"The Cranberries", year:null, audioUrl:"/songs/dreams.mp3" },
+{ id:19, title:"Dyou Know What I Mean", artist:"Oasis", year:null, audioUrl:"/songs/dyouknowwhatimean.mp3" },
+{ id:20, title:"eBow The Letter", artist:"REM", year:null, audioUrl:"/songs/ebowtheletter.mp3" },
+{ id:21, title:"Enjoy The Silence", artist:"Depeche Mode", year:null, audioUrl:"/songs/enjoythesilence.mp3" },
+{ id:22, title:"Everlong", artist:"Foo Fighters", year:null, audioUrl:"/songs/everlong.mp3" },
+{ id:23, title:"Everyday is Like Sunday", artist:"Morrissey", year:null, audioUrl:"/songs/everydayislikesunday.mp3" },
+{ id:24, title:"Eyes Without a Face", artist:"Billy Idol", year:null, audioUrl:"/songs/eyeswithoutaface.mp3" },
+{ id:25, title:"Fluorescent Adolescent", artist:"Arctic Monkeys", year:null, audioUrl:"/songs/fluorescentadolescent.mp3" },
+{ id:26, title:"Fools Gold", artist:"The Stone Roses", year:null, audioUrl:"/songs/foolsgold.mp3" },
+{ id:27, title:"franklymrshankly", artist:"the smiths", year:null, audioUrl:"/songs/franklymrshankly.mp3" },
+{ id:28, title:"Girls And Boys", artist:"Blur", year:null, audioUrl:"/songs/girlsandboys.mp3" },
+{ id:29, title:"Go Your Own Way", artist:"Fleetwood Mac", year:null, audioUrl:"/songs/goyourownway.mp3" },
+{ id:30, title:"Hard to Explain", artist:"The Strokes", year:null, audioUrl:"/songs/hardtoexplain.mp3" },
+{ id:31, title:"Help the Aged", artist:"Pulp", year:null, audioUrl:"/songs/helptheaged.mp3" },
+{ id:32, title:"Heroes", artist:"David Bowie", year:null, audioUrl:"/songs/heroes.mp3" },
+{ id:33, title:"High and Dry", artist:"Radiohead", year:null, audioUrl:"/songs/highanddry.mp3" },
+{ id:34, title:"How Soon Is Now", artist:"The Smiths", year:null, audioUrl:"/songs/howsoonisnow.mp3" },
+{ id:35, title:"If God Will Send His Angels", artist:"U2", year:null, audioUrl:"/songs/ifgodwillsendhisangels.mp3" },
+{ id:36, title:"Keep the Dream Alive", artist:"Oasis", year:null, audioUrl:"/songs/keepthedreamalive.mp3" },
+{ id:37, title:"Let It Happen", artist:"Tame Impala", year:null, audioUrl:"/songs/letithappen.mp3" },
+{ id:38, title:"Like a Friend", artist:"Pulp", year:null, audioUrl:"/songs/likeafriend.mp3" },
+{ id:39, title:"Little by Little", artist:"Oasis", year:null, audioUrl:"/songs/littlebylittle.mp3" },
+{ id:40, title:"Lonely Boy", artist:"The Black Keys", year:null, audioUrl:"/songs/lonelyboy.mp3" },
+{ id:41, title:"Losing My Religion", artist:"R.E.M.", year:null, audioUrl:"/songs/losingmyreligion.mp3" },
+{ id:42, title:"Love Will Tear Us Apart", artist:"Joy Division", year:null, audioUrl:"/songs/lovewilltearusapart.mp3" },
+{ id:43, title:"Lucky Man", artist:"The Verve", year:null, audioUrl:"/songs/luckyman.mp3" },
+{ id:44, title:"Mardy Bum", artist:"Arctic Monkeys", year:null, audioUrl:"/songs/mardybum.mp3" },
+{ id:45, title:"Morning Glory", artist:"Oasis", year:null, audioUrl:"/songs/morningglory.mp3" },
+{ id:46, title:"On Your Own", artist:"The Verve", year:null, audioUrl:"/songs/onyourown.mp3" },
+{ id:47, title:"Paint It Black", artist:"The Rolling Stones", year:null, audioUrl:"/songs/paintitblack.mp3" },
+{ id:48, title:"Paradise Circus", artist:"Massive Attack", year:null, audioUrl:"/songs/paradisecircus.mp3" },
+{ id:49, title:"Parklife", artist:"Blur", year:null, audioUrl:"/songs/parklife.mp3" },
+{ id:50, title:"Pictures of You", artist:"The Cure", year:null, audioUrl:"/songs/picturesofyou.mp3" },
+{ id:51, title:"Please Please Please Let Me Get What I Want", artist:"The Smiths", year:null, audioUrl:"/songs/pleasepleasepleaseletmegetwhatIwant.mp3" },
+{ id:52, title:"Reptilia", artist:"The Strokes", year:null, audioUrl:"/songs/reptilia.mp3" },
+{ id:53, title:"Re-Wired", artist:"Kasabian", year:null, audioUrl:"/songs/rewired.mp3" },
+{ id:54, title:"Rockin' Chair", artist:"Oasis", year:null, audioUrl:"/songs/rockinchair.mp3" },
+{ id:55, title:"She Moves in Her Own Way", artist:"The Kooks", year:null, audioUrl:"/songs/shemovesinherownway.mp3" },
+{ id:56, title:"Shoot You Down", artist:"The Stone Roses", year:null, audioUrl:"/songs/shootyoudown.mp3" },
+{ id:57, title:"Sleep Like a Baby Tonight", artist:"U2", year:null, audioUrl:"/songs/sleeplikeababytonight.mp3" },
+{ id:58, title:"Slide Away", artist:"Oasis", year:null, audioUrl:"/songs/slideaway.mp3" },
+{ id:59, title:"Somebody Told Me", artist:"The Killers", year:null, audioUrl:"/songs/somebodytoldme.mp3" },
+{ id:60, title:"Some Might Say", artist:"Oasis", year:null, audioUrl:"/songs/somemightsay.mp3" },
+{ id:61, title:"Sometimes You Can't Make It on Your Own", artist:"U2", year:null, audioUrl:"/songs/sometimesyoucantmakeitonyourown.mp3" },
+{ id:62, title:"Song 2", artist:"Blur", year:null, audioUrl:"/songs/song2.mp3" },
+{ id:63, title:"Sonnet", artist:"The Verve", year:null, audioUrl:"/songs/sonnet.mp3" },
+{ id:64, title:"Street Fighting Man", artist:"The Rolling Stones", year:null, audioUrl:"/songs/streetfightingman.mp3" },
+{ id:65, title:"Suedehead", artist:"Morrissey", year:null, audioUrl:"/songs/suedehead.mp3" },
+{ id:66, title:"Supersonic", artist:"Oasis", year:null, audioUrl:"/songs/supersonic.mp3" },
+{ id:67, title:"Take on Me", artist:"a-ha", year:null, audioUrl:"/songs/takeonme.mp3" },
+{ id:68, title:"Talk Tonight", artist:"Oasis", year:null, audioUrl:"/songs/talktonight.mp3" },
+{ id:69, title:"Tender", artist:"Blur", year:null, audioUrl:"/songs/tender.mp3" },
+{ id:70, title:"The Hindu Times", artist:"Oasis", year:null, audioUrl:"/songs/thehindutimes.mp3" },
+{ id:71, title:"The Killing Moon", artist:"Echo & The Bunnymen", year:null, audioUrl:"/songs/thekillingmoon.mp3" },
+{ id:72, title:"The Mighty I", artist:"Noel Gallagher", year:null, audioUrl:"/songs/themightyi.mp3" },
+{ id:73, title:"The Queen Is Dead", artist:"The Smiths", year:null, audioUrl:"/songs/thequeenisdead.mp3" },
+{ id:74, title:"There She Goes", artist:"The La's", year:null, audioUrl:"/songs/thereshegoes.mp3" },
+{ id:75, title:"These Days", artist:"Nico", year:null, audioUrl:"/songs/thesedays.mp3" },
+{ id:76, title:"The Wild Ones", artist:"Suede", year:null, audioUrl:"/songs/thewildones.mp3" },
+{ id:77, title:"This Charming Man", artist:"The Smiths", year:null, audioUrl:"/songs/thischarmingman.mp3" },
+{ id:78, title:"This Is Hardcore", artist:"Pulp", year:null, audioUrl:"/songs/thisishardcore.mp3" },
+{ id:79, title:"Tonite", artist:"Jarvis Cocker", year:null, audioUrl:"/songs/tonite.mp3" },
+{ id:80, title:"A Town Called Malice", artist:"The Jam", year:null, audioUrl:"/songs/towncalledmalice.mp3" },
+{ id:81, title:"Wet Sand", artist:"Red Hot Chili Peppers", year:null, audioUrl:"/songs/wetsand.mp3" },
+{ id:82, title:"Whatever", artist:"Oasis", year:null, audioUrl:"/songs/whatever.mp3" },
+{ id:83, title:"What's Up", artist:"4 Non Blondes", year:null, audioUrl:"/songs/whatsup.mp3" },
+{ id:84, title:"When the Sun Goes Down", artist:"Arctic Monkeys", year:null, audioUrl:"/songs/whenthesungoesdown.mp3" },
+{ id:85, title:"Wicked Game", artist:"Chris Isaak", year:null, audioUrl:"/songs/wickedgame.mp3" },
+{ id:86, title:"With or Without You", artist:"U2", year:null, audioUrl:"/songs/withorwithoutyou.mp3" },
+{ id:87, title:"Karma Police", artist:"Radiohead", year:null, audioUrl:"/songs/Karma Police.mp3" },
+{ id:88, title:"Champagne Supernova", artist:"Oasis", year:null, audioUrl:"/songs/Champagne Supernova.mp3" },
+{ id:89, title:"Come As You Are", artist:"Nirvana", year:null, audioUrl:"/songs/Come As You Are.mp3" },
+{ id:90, title:"Don't Look Back in Anger", artist:"Oasis", year:null, audioUrl:"/songs/Don't Look Back in Anger.mp3" },
+{ id:91, title:"Ready To Start", artist:"Arcade Fire", year:null, audioUrl:"/songs/ready-to-start.mp3" },
 ];
 
 // ════════════════════════════════════════════════════════════
@@ -349,6 +450,13 @@ const GLOBAL_CSS = `
   .history-pts.green{color:var(--green)}
   .history-pts.blue{color:var(--blue)}
   .history-pts.dim{color:var(--text-dim)}
+  .history-pts.pending-col{color:var(--border2)}
+  .archive-playable{cursor:pointer}
+  .archive-playable:hover{border-color:var(--border2);background:var(--surface2)}
+  .archive-btn{background:none;border:none;padding:0.15rem 0;font-size:0.68rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;text-decoration:underline;text-underline-offset:3px;cursor:pointer;text-align:left;margin-top:0.35rem}
+  .home-card.green .archive-btn{color:var(--green-dark)}
+  .home-card.blue .archive-btn{color:var(--blue-dark)}
+  .archive-btn:hover{opacity:0.75}
 
 
 `;
@@ -373,13 +481,16 @@ function HighlightMatch({ text, query }) {
 const LB_HINT_NAMES = ["3ª reseña","2ª reseña","1ª reseña"];
 const LB_POINTS = [3,2,1];
 
-function LetterboxdGame({ onBack }) {
-  const todayKey = getTodayKey();
-  const dayIdx = getDayIndex();
+function LetterboxdGame({ onBack, dayIdx: propDayIdx }) {
+  const todayIdx = getDayIndex();
+  const dayIdx = propDayIdx ?? todayIdx;
+  const isToday = dayIdx === todayIdx;
+  const gameKey = dayIndexToKey(dayIdx);
   const movie = MOVIES[((dayIdx % MOVIES.length) + MOVIES.length) % MOVIES.length];
 
-  const saved = (() => { try { return JSON.parse(localStorage.getItem("gtf_lb")||"{}"); } catch { return {}; } })();
-  const alreadyPlayed = saved.date === todayKey;
+  const storageKey = isToday ? "gtf_lb" : `gtf_lb_${gameKey}`;
+  const saved = (() => { try { return JSON.parse(localStorage.getItem(storageKey)||"{}"); } catch { return {}; } })();
+  const alreadyPlayed = saved.played === true;
 
   const [hintLevel, setHintLevel] = useState(0);
   const [flipped, setFlipped] = useState(alreadyPlayed);
@@ -409,15 +520,13 @@ function LetterboxdGame({ onBack }) {
   }, []);
 
   function persist(sc, hl) {
-    const y = (() => { const d=new Date(); d.setDate(d.getDate()-1); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; })();
-    const newStreak = saved.date === y ? (saved.streak ?? 0) + 1 : 1;
-    setStreak(newStreak);
-    // Save to history
-    const hist = (() => { try { return JSON.parse(localStorage.getItem("gtf_lb_hist")||"[]"); } catch { return []; } })();
-    const entry = { date:todayKey, dayIdx, title:movie.title, year:movie.year, director:movie.director, score:sc };
-    const filtered = hist.filter(h => h.date !== todayKey);
-    localStorage.setItem("gtf_lb_hist", JSON.stringify([entry, ...filtered].slice(0,60)));
-    localStorage.setItem("gtf_lb", JSON.stringify({ date:todayKey, score:sc, hintLevel:hl, streak:newStreak }));
+    localStorage.setItem(storageKey, JSON.stringify({ played:true, score:sc, hintLevel:hl, dayIdx }));
+    if (isToday) {
+      const y = (() => { const d=new Date(); d.setDate(d.getDate()-1); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; })();
+      const newStreak = saved.streak && saved.date ? (saved.streak ?? 0) + 1 : 1;
+      setStreak(newStreak);
+      localStorage.setItem("gtf_lb", JSON.stringify({ played:true, score:sc, hintLevel:hl, dayIdx, streak:newStreak }));
+    }
   }
 
   const review = movie.reviews.find(r => r.rank === 3 - hintLevel);
@@ -550,26 +659,31 @@ function LetterboxdGame({ onBack }) {
       {screen === "done" && (
         <div className="tomorrow">
           <div className="tomorrow-icon">{score===3?"🏆":score===2?"⭐":score===1?"✅":"😔"}</div>
-          <h2 className={`tomorrow-title green`}>
-            {score > 0 ? <>¡Adivinaste la película del día!</> : <>No pasa nada,<br/><em>volvé mañana</em></>}
+          <h2 className="tomorrow-title green">
+            {score > 0
+              ? (isToday ? <>¡Adivinaste la película del día!</> : <>¡Adivinaste!</>)
+              : (isToday ? <>No pasa nada,<br/><em>volvé mañana</em></> : <>Mala suerte</>)}
           </h2>
           <div className="result-card">
             <div>
-              <p className="t-label">Película de hoy</p>
+              <p className="t-label">{isToday ? "Película de hoy" : `Del ${dayIndexToLabel(dayIdx)}`}</p>
               <p className="t-main-title">{movie.title}</p>
               <p className="t-meta">{movie.year} · {movie.director} · {movie.stars}</p>
             </div>
             <div className="divider"/>
             <div className="score-row">
-              <span className="score-row-label">{score > 0 ? `Con la ${hintUsed}` : "Sin puntos hoy"}</span>
+              <span className="score-row-label">{score > 0 ? `Con la ${hintUsed}` : "Sin puntos"}</span>
               <span className="score-row-val green">{score ?? 0} pts</span>
             </div>
-            {streak > 1 && <div className="streak-pill"><span>🔥</span><span><b>{streak}</b> días seguidos</span></div>}
+            {isToday && streak > 1 && <div className="streak-pill"><span>🔥</span><span><b>{streak}</b> días seguidos</span></div>}
           </div>
-          <div className="countdown-box">
-            <span className="countdown-label">Próxima película en</span>
-            <span className="countdown">{pad(countdown.h)}<span>h</span> {pad(countdown.m)}<span>m</span> {pad(countdown.s)}<span>s</span></span>
-          </div>
+          {isToday
+            ? <div className="countdown-box">
+                <span className="countdown-label">Próxima película en</span>
+                <span className="countdown">{pad(countdown.h)}<span>h</span> {pad(countdown.m)}<span>m</span> {pad(countdown.s)}<span>s</span></span>
+              </div>
+            : <button className="btn-ghost" onClick={onBack} style={{marginTop:"0.5rem"}}>← Volver al archivo</button>
+          }
         </div>
       )}
     </>
@@ -582,14 +696,16 @@ function LetterboxdGame({ onBack }) {
 const MAX_SECONDS = 11;
 const STEP = 2; // seconds added per hint
 
-function SongGame({ onBack }) {
-  const todayKey = getTodayKey();
-  const dayIdx = getDayIndex();
-  // Use a different offset so songs don't align with movies
+function SongGame({ onBack, dayIdx: propDayIdx }) {
+  const todayIdx = getDayIndex();
+  const dayIdx = propDayIdx ?? todayIdx;
+  const isToday = dayIdx === todayIdx;
+  const gameKey = dayIndexToKey(dayIdx);
   const song = SONGS[((dayIdx + 7) % SONGS.length + SONGS.length) % SONGS.length];
 
-  const saved = (() => { try { return JSON.parse(localStorage.getItem("gtf_song")||"{}"); } catch { return {}; } })();
-  const alreadyPlayed = saved.date === todayKey;
+  const storageKey = isToday ? "gtf_song" : `gtf_song_${gameKey}`;
+  const saved = (() => { try { return JSON.parse(localStorage.getItem(storageKey)||"{}"); } catch { return {}; } })();
+  const alreadyPlayed = saved.played === true;
 
   const [unlockedSecs, setUnlockedSecs] = useState(alreadyPlayed ? (saved.unlockedSecs ?? 1) : 1);
   const [playing, setPlaying] = useState(false);
@@ -603,7 +719,6 @@ function SongGame({ onBack }) {
   const [screen, setScreen] = useState(alreadyPlayed ? "done" : "game");
   const [countdown, setCountdown] = useState(getTimeUntilMidnight());
   const [streak, setStreak] = useState(saved.streak ?? 0);
-  const [showHistory, setShowHistory] = useState(false);
   const [waveHeights, setWaveHeights] = useState(Array(20).fill(4));
   const audioRef = useRef(null);
   const timerRef = useRef(null);
@@ -669,14 +784,12 @@ function SongGame({ onBack }) {
   }
 
   function persist(w, secs) {
-    const y = (() => { const d=new Date(); d.setDate(d.getDate()-1); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; })();
-    const newStreak = saved.date === y ? (saved.streak ?? 0) + 1 : 1;
-    setStreak(newStreak);
-    const hist = (() => { try { return JSON.parse(localStorage.getItem("gtf_song_hist")||"[]"); } catch { return []; } })();
-    const entry = { date:todayKey, dayIdx, title:song.title, artist:song.artist, year:song.year, won:w, unlockedSecs:secs };
-    const filtered = hist.filter(h => h.date !== todayKey);
-    localStorage.setItem("gtf_song_hist", JSON.stringify([entry, ...filtered].slice(0,60)));
-    localStorage.setItem("gtf_song", JSON.stringify({ date:todayKey, won:w, unlockedSecs:secs, streak:newStreak }));
+    localStorage.setItem(storageKey, JSON.stringify({ played:true, won:w, unlockedSecs:secs, dayIdx }));
+    if (isToday) {
+      const newStreak = (saved.streak ?? 0) + 1;
+      setStreak(newStreak);
+      localStorage.setItem("gtf_song", JSON.stringify({ played:true, won:w, unlockedSecs:secs, dayIdx, streak:newStreak }));
+    }
   }
 
   function handleGuessChange(val) {
@@ -730,36 +843,8 @@ function SongGame({ onBack }) {
   const totalSegments = Math.ceil((MAX_SECONDS - 1) / STEP) + 1; // 1,3,5,7,9,11 = 6
   const segSeconds = [1,3,5,7,9,11];
 
-  const history = (() => { try { return JSON.parse(localStorage.getItem("gtf_song_hist")||"[]"); } catch { return []; } })();
 
-  if (showHistory) {
-    return (
-      <div className="main">
-        <div>
-          <p className="header-label">Historial</p>
-          <h1 className="header-title">One Song a Day — canciones pasadas</h1>
-        </div>
-        {history.length === 0
-          ? <p style={{color:"var(--text-dim)",fontSize:"0.85rem"}}>Todavía no hay canciones jugadas.</p>
-          : <div className="history-grid">
-              {history.map((h,i) => (
-                <div key={i} className="history-row">
-                  <span className="history-date">{h.date}</span>
-                  <div className="history-info">
-                    <div className="history-title">{h.title}</div>
-                    <div className="history-sub">{h.artist} · {h.year}</div>
-                  </div>
-                  <span className={`history-pts ${h.won?"blue":"dim"}`}>
-                    {h.won ? `✓ ${h.unlockedSecs}s` : "✗"}
-                  </span>
-                </div>
-              ))}
-            </div>
-        }
-        <button className="btn-ghost" onClick={() => setShowHistory(false)} style={{alignSelf:"center"}}>← Volver</button>
-      </div>
-    );
-  }
+
 
   return (
     <>
@@ -834,7 +919,6 @@ function SongGame({ onBack }) {
             )}
           </div>
 
-          <button className="history-btn" onClick={() => setShowHistory(true)}>Ver canciones pasadas →</button>
         </div>
       )}
 
@@ -842,29 +926,102 @@ function SongGame({ onBack }) {
         <div className="tomorrow">
           <div className="tomorrow-icon">{won ? "🎵" : "😔"}</div>
           <h2 className="tomorrow-title blue">
-            {won ? <>¡Adivinaste la canción del día!</> : <>No pasa nada,<br/><em>volvé mañana</em></>}
+            {won
+              ? (isToday ? <>¡Adivinaste la canción del día!</> : <>¡Adivinaste!</>)
+              : (isToday ? <>No pasa nada,<br/><em>volvé mañana</em></> : <>Mala suerte</>)}
           </h2>
           <div className="result-card">
             <div>
-              <p className="t-label">Canción de hoy</p>
+              <p className="t-label">{isToday ? "Canción de hoy" : `Del ${dayIndexToLabel(dayIdx)}`}</p>
               <p className="t-main-title">{song.title}</p>
               <p className="t-meta">{song.artist} · {song.year}</p>
             </div>
             <div className="divider"/>
             <div className="score-row">
-              <span className="score-row-label">{won ? `Adivinaste con ${unlockedSecs} segundo${unlockedSecs!==1?"s":""}` : "No adivinada hoy"}</span>
+              <span className="score-row-label">{won ? `Adivinaste con ${unlockedSecs}s` : "No adivinada"}</span>
               <span className={`score-row-val ${won?"blue":"dim"}`}>{won ? `${unlockedSecs}s` : "—"}</span>
             </div>
-            {streak > 1 && <div className="streak-pill"><span>🔥</span><span><b>{streak}</b> días seguidos</span></div>}
+            {isToday && streak > 1 && <div className="streak-pill"><span>🔥</span><span><b>{streak}</b> días seguidos</span></div>}
           </div>
-          <div className="countdown-box">
-            <span className="countdown-label">Próxima canción en</span>
-            <span className="countdown">{pad(countdown.h)}<span>h</span> {pad(countdown.m)}<span>m</span> {pad(countdown.s)}<span>s</span></span>
-          </div>
-          <button className="history-btn" onClick={() => setShowHistory(true)}>Ver canciones pasadas →</button>
+          {isToday
+            ? <div className="countdown-box">
+                <span className="countdown-label">Próxima canción en</span>
+                <span className="countdown">{pad(countdown.h)}<span>h</span> {pad(countdown.m)}<span>m</span> {pad(countdown.s)}<span>s</span></span>
+              </div>
+            : <button className="btn-ghost" onClick={onBack} style={{marginTop:"0.5rem"}}>← Volver al archivo</button>
+          }
         </div>
       )}
     </>
+  );
+}
+
+// ════════════════════════════════════════════════════════════
+//  ARCHIVE SCREEN
+// ════════════════════════════════════════════════════════════
+function ArchiveScreen({ game, onSelect, onBack }) {
+  const todayIdx = getDayIndex();
+  const days = getPastDays(todayIdx, 30);
+  const prefix = game === "lb" ? "gtf_lb" : "gtf_song";
+  const accent = game === "lb" ? "green" : "blue";
+  const icon = game === "lb" ? "🎬" : "🎵";
+  const title = game === "lb" ? "Guess the Film" : "One Song a Day";
+
+  function getState(key) {
+    try {
+      const s = JSON.parse(localStorage.getItem(`${prefix}_${key}`) || "null");
+      if (!s || !s.played) return "pending";
+      return game === "lb" ? (s.score > 0 ? "won" : "lost") : (s.won ? "won" : "lost");
+    } catch { return "pending"; }
+  }
+
+  function getScore(key) {
+    try {
+      const s = JSON.parse(localStorage.getItem(`${prefix}_${key}`) || "null");
+      if (!s || !s.played) return null;
+      return game === "lb" ? `${s.score}pts` : (s.won ? `${s.unlockedSecs}s` : "—");
+    } catch { return null; }
+  }
+
+  return (
+    <div className="main">
+      <div style={{display:"flex",alignItems:"center",gap:"0.75rem",marginBottom:"0.25rem"}}>
+        <span style={{fontSize:"1.2rem"}}>{icon}</span>
+        <div>
+          <p className="header-label">Archivo · últimos 30 días</p>
+          <h1 className="header-title">{title}</h1>
+        </div>
+      </div>
+      <div className="history-grid">
+        {days.map(({dayIdx, key, label}) => {
+          const state = getState(key);
+          const score = getScore(key);
+          const item = game === "lb"
+            ? MOVIES[((dayIdx % MOVIES.length) + MOVIES.length) % MOVIES.length]
+            : SONGS[((dayIdx + 7) % SONGS.length + SONGS.length) % SONGS.length];
+          return (
+            <div key={key}
+              className={`history-row${state === "pending" ? " archive-playable" : ""}`}
+              onClick={() => state === "pending" && onSelect(dayIdx)}>
+              <span className="history-date">{label}</span>
+              <div className="history-info">
+                {state === "pending"
+                  ? <div className="history-title" style={{color:`var(--${accent})`}}>Jugar →</div>
+                  : <>
+                      <div className="history-title">{item.title}</div>
+                      <div className="history-sub">{game === "lb" ? item.director : item.artist}</div>
+                    </>
+                }
+              </div>
+              <span className={`history-pts ${state === "won" ? accent : state === "lost" ? "dim" : "pending-col"}`}>
+                {state === "pending" ? "·" : state === "won" ? `✓ ${score}` : "✗"}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+      <button className="btn-ghost" onClick={onBack} style={{alignSelf:"center"}}>← Volver</button>
+    </div>
   );
 }
 
@@ -896,6 +1053,7 @@ function HomeScreen({ onSelect }) {
             <div className="badge-dot"/>
             {lbDone ? "✓ Ya jugaste hoy" : "Jugar ahora"}
           </div>
+          <button className="archive-btn" onClick={e=>{e.stopPropagation();onSelect("lb-archive");}}>Ver días pasados →</button>
         </div>
         <div className="home-card blue" onClick={() => onSelect("song")}>
           <div className="home-card-icon">🎵</div>
@@ -905,6 +1063,7 @@ function HomeScreen({ onSelect }) {
             <div className="badge-dot"/>
             {songDone ? "✓ Ya jugaste hoy" : "Jugar ahora"}
           </div>
+          <button className="archive-btn" onClick={e=>{e.stopPropagation();onSelect("song-archive");}}>Ver días pasados →</button>
         </div>
       </div>
     </div>
@@ -915,17 +1074,20 @@ function HomeScreen({ onSelect }) {
 //  ROOT APP
 // ════════════════════════════════════════════════════════════
 export default function App() {
-  const [view, setView] = useState("home"); // "home" | "lb" | "song"
+  const [view, setView] = useState("home");
+  const [archiveDayIdx, setArchiveDayIdx] = useState(null);
 
   const today = new Date().toLocaleDateString("es-AR", { weekday:"long", day:"numeric", month:"long" });
   const todayStr = today.charAt(0).toUpperCase() + today.slice(1);
+
+  function go(v, dayIdx = null) { setView(v); setArchiveDayIdx(dayIdx); }
 
   return (
     <>
       <style>{GLOBAL_CSS}</style>
       <div className="app">
         <nav className="nav">
-          <div className="nav-brand" onClick={() => setView("home")}>
+          <div className="nav-brand" onClick={() => go("home")}>
             <div className="nav-dots">
               <div className="nav-dot"/><div className="nav-dot"/><div className="nav-dot"/>
             </div>
@@ -933,15 +1095,15 @@ export default function App() {
           </div>
           <div className="nav-right">
             <span className="nav-date">{todayStr}</span>
-            {view !== "home" && (
-              <button className="nav-back" onClick={() => setView("home")}>← Inicio</button>
-            )}
+            {view !== "home" && <button className="nav-back" onClick={() => go("home")}>← Inicio</button>}
           </div>
         </nav>
 
-        {view === "home" && <HomeScreen onSelect={setView}/>}
-        {view === "lb"   && <LetterboxdGame onBack={() => setView("home")}/>}
-        {view === "song" && <SongGame onBack={() => setView("home")}/>}
+        {view === "home"        && <HomeScreen onSelect={v => go(v)}/>}
+        {view === "lb"          && <LetterboxdGame onBack={() => go(archiveDayIdx != null ? "lb-archive" : "home")} dayIdx={archiveDayIdx ?? undefined}/>}
+        {view === "song"        && <SongGame       onBack={() => go(archiveDayIdx != null ? "song-archive" : "home")} dayIdx={archiveDayIdx ?? undefined}/>}
+        {view === "lb-archive"  && <ArchiveScreen game="lb"   onSelect={idx => go("lb", idx)}   onBack={() => go("home")}/>}
+        {view === "song-archive"&& <ArchiveScreen game="song" onSelect={idx => go("song", idx)} onBack={() => go("home")}/>}
       </div>
     </>
   );
