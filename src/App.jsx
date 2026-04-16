@@ -162,7 +162,208 @@ const MOVIES = [
     {rank:2,author:"barry_keoghan_fan",text:"Barry Keoghan spends two hours making you believe one thing and then the film ends and you realize you believed nothing. The performance is a long con and he never breaks character for a second."},
     {rank:1,author:"final_dance_forever",text:"The final scene. I watched it three times. I cannot tell if it's empowering or horrifying. I think that's the point. The director holds the camera steady and lets you sit with it."},
   ]},
+  { id:24, title:"No Country for Old Men", year:2007, director:"Coen Brothers", stars:"★★★★★", reviews:[
+    {rank:3,author:"coen_devotee",text:"A film that refuses to give you what you came for and is more devastating for it. The villain doesn't lose. The hero doesn't win. The ending is a dream about death and the movie just stops."},
+    {rank:2,author:"anton_forever",text:"Javier Bardem invented a new kind of screen villain — one without motive you can argue with, without psychology you can explain. He's a force of nature wearing a haircut."},
+    {rank:1,author:"sheriff_bell",text:"Tommy Lee Jones' final monologue is one of the great closing speeches in American cinema. He describes two dreams and then the film cuts to black. I didn't breathe for thirty seconds."},
+  ]},
+  { id:25, title:"There Will Be Blood", year:2007, director:"Paul Thomas Anderson", stars:"★★★★★", reviews:[
+    {rank:3,author:"pta_oils",text:"An American creation myth told as a horror film. The first fifteen minutes have no dialogue — just a man, a hole in the ground, and the thing he's willing to become to fill it."},
+    {rank:2,author:"day_lewis_maniac",text:"Daniel Day-Lewis gives the greatest performance in the history of American cinema. I will hear 'I'm finished!' in my head until I die. He doesn't play a character — he becomes a geological force."},
+    {rank:1,author:"milkshake_scene",text:"The bowling alley scene. I will not spoil it. I will just say that when the credits rolled, the entire theater was silent for a full ten seconds before anyone moved."},
+  ]},
+  { id:26, title:"Eternal Sunshine of the Spotless Mind", year:2004, director:"Michel Gondry", stars:"★★★★★", reviews:[
+    {rank:3,author:"gondry_memory",text:"A film about erasing someone you loved — told backwards, then sideways, then from inside the erasure itself. The structure is the emotion. You feel the loss as the memories disappear."},
+    {rank:2,author:"jim_kate_duo",text:"Jim Carrey gives the best performance of his career in a film that sneaks up on you completely. By the time you understand what's happening, you're already devastated."},
+    {rank:1,author:"clementine_joel",text:"Meet me in Montauk. Those four words destroyed me when I first heard them and they destroy me every single time. The ending is hopeful and hopeless in the same breath."},
+  ]},
+  { id:27, title:"2001: A Space Odyssey", year:1968, director:"Stanley Kubrick", stars:"★★★★★", reviews:[
+    {rank:3,author:"kubrick_monolith",text:"Not a film — a religious experience for atheists. The match cut from bone to spacecraft is the single greatest edit in cinema history. Everything after that is humanity trying to understand itself."},
+    {rank:2,author:"hal_9000_fan",text:"HAL 9000 is the most terrifying villain in cinema and he never raises his voice. The calmness is the horror. 'I'm sorry Dave' delivered with absolute serenity is more frightening than any scream."},
+    {rank:1,author:"stargate_sequence",text:"I still don't know what the ending means. I've watched it six times. I think that's the point. Kubrick made a film that refuses to be decoded and somehow that refusal is its greatest achievement."},
+  ]},
+  { id:28, title:"Chinatown", year:1974, director:"Roman Polanski", stars:"★★★★★", reviews:[
+    {rank:3,author:"noir_classicist",text:"The greatest neo-noir ever made. A film that uses the conventions of detective fiction to arrive somewhere no detective story has ever gone — pure, structural evil that cannot be defeated."},
+    {rank:2,author:"jack_nicholson_nose",text:"Jack Nicholson at the absolute peak of his powers. The nose scene is one of cinema's great moments of physical comedy and menace simultaneously. He holds the whole thing together with effortless cool."},
+    {rank:1,author:"forget_it_jake",text:"'Forget it, Jake. It's Chinatown.' The most devastating final line in cinema. The whole film exists to earn those six words and it earns them completely. I've never felt so hopeless watching a movie."},
+  ]},
+  { id:29, title:"Stalker", year:1979, director:"Andrei Tarkovsky", stars:"★★★★★", reviews:[
+    {rank:3,author:"tarkovsky_zone",text:"A three-hour philosophical meditation disguised as a sci-fi film. Nothing explodes. Nobody wins. Three men walk through a forbidden zone toward a room that grants wishes. The journey is the meaning."},
+    {rank:2,author:"slow_cinema_fan",text:"Tarkovsky shoots water, grass, abandoned machinery with such reverence that by the end of the film the physical world feels sacred. I don't know how he does it. I don't think I want to know."},
+    {rank:1,author:"the_room_ending",text:"The ending destroyed any certainty I had about what I'd watched. The final image is either miraculous or completely mundane. Tarkovsky refuses to tell you which. That refusal is the whole point."},
+  ]},
+  { id:30, title:"Apocalypse Now", year:1979, director:"Francis Ford Coppola", stars:"★★★★★", reviews:[
+    {rank:3,author:"coppola_river",text:"A war film that becomes a fever dream that becomes a philosophical horror show. The journey up the river is the journey into madness — structured exactly like the thing it's depicting."},
+    {rank:2,author:"brando_kurtz",text:"Marlon Brando improvised most of his dialogue and it's some of the most hypnotic monologue ever recorded. He sits in shadow and talks about horror and you cannot look away for a single second."},
+    {rank:1,author:"the_horror",text:"'The horror. The horror.' Two words that contain a universe of meaning. The film earns them through two and a half hours of mounting dread. The ending isn't a conclusion — it's a collapse."},
+  ]},
+  { id:31, title:"Yi Yi", year:2000, director:"Edward Yang", stars:"★★★★★", reviews:[
+    {rank:3,author:"edward_yang_fan",text:"A three-hour film about one Taiwanese family that contains everything. Birth, death, first love, fading marriage, the cruelty of childhood, the loneliness of old age. Life in a single story."},
+    {rank:2,author:"yang_yang_camera",text:"The little boy who photographs the backs of people's heads because 'you can't see what you look like from behind' is one of cinema's great characters. Eight years old and already a philosopher."},
+    {rank:1,author:"taiwan_cinema",text:"The final speech made me cry harder than almost anything else I've seen. A child addresses a dead grandmother and accidentally summarizes the entire human condition. Edward Yang was a genius."},
+  ]},
+  { id:32, title:"The Tree of Life", year:2011, director:"Terrence Malick", stars:"★★★★★", reviews:[
+    {rank:3,author:"malick_whisper",text:"A film that asks where God is while watching a child grow up in 1950s Texas — and answers the question with a twenty-minute sequence about the formation of the universe. Completely insane. Completely correct."},
+    {rank:2,author:"brad_pitt_dad",text:"Brad Pitt plays a father who loves his sons and cannot stop hurting them. It's the most honest portrait of masculine disappointment I've ever seen. He's never been better or more uncomfortable to watch."},
+    {rank:1,author:"cosmic_grief",text:"I went in expecting pretension and came out feeling like I'd had a religious experience. The whispering voiceover, the dinosaurs, the beach at the end — it shouldn't work. It works completely."},
+  ]},
+  { id:33, title:"Jeanne Dielman", year:1975, director:"Chantal Akerman", stars:"★★★★★", reviews:[
+    {rank:3,author:"akerman_kitchen",text:"Three hours and twenty minutes of a woman doing housework. By the end, you understand something about time, repetition, and the violence of domestic routine that no other film has ever captured."},
+    {rank:2,author:"feminist_cinema",text:"The film is a radical formal experiment — static camera, real time, minimal cutting — and also the most emotionally devastating thing I've seen. The final act follows from everything before it with terrible logic."},
+    {rank:1,author:"real_time_horror",text:"When the deviation happens, it hits like a thunderclap despite being completely quiet. She's been preparing for it for three hours and so have you. The greatest slow-burn in cinema history."},
+  ]},
+  { id:34, title:"Mulholland Drive", year:2001, director:"David Lynch", stars:"★★★★★", reviews:[
+    {rank:3,author:"lynch_dream2",text:"The first half is a dream. The second half is the truth. Once you understand which is which, every image in the first half transforms into something heartbreaking. A film that watches differently every time."},
+    {rank:2,author:"naomi_watts2",text:"Naomi Watts plays two characters who are the same person and she makes both completely real. The scene at Club Silencio is the most unsettling thing Lynch has ever done, which is saying everything."},
+    {rank:1,author:"diner_monster",text:"The monster behind the diner. I still cannot explain why it affects me the way it does. It's barely on screen. It does almost nothing. And it is the most terrifying thing I have ever seen in a film."},
+  ]},
+  { id:35, title:"Memories of Murder", year:2003, director:"Bong Joon-ho", stars:"★★★★★", reviews:[
+    {rank:3,author:"bong_debut",text:"A true-crime procedural that slowly, painfully dismantles every expectation the genre creates. The incompetence isn't comic — it's tragic. The failure to catch the killer is a national wound."},
+    {rank:2,author:"song_kang_ho",text:"Song Kang-ho's performance is the best of his career. He plays a man whose confidence is a performance, and you watch it collapse in real time across the film. The final scene is unbearable."},
+    {rank:1,author:"final_look",text:"The last shot — a man looking directly into the camera — is one of cinema's most devastating endings. He's looking at us. At the audience. At the future. He knows what we know."},
+  ]},
+  { id:36, title:"City of God", year:2002, director:"Fernando Meirelles", stars:"★★★★★", reviews:[
+    {rank:3,author:"favela_cinema",text:"Shot with frenetic energy that somehow never becomes chaos — every cut earns itself, every scene builds the world. A film about violence that indicts the systems that create it without ever making a speech."},
+    {rank:2,author:"rocket_busca",text:"The structure — told through stories within stories, time folding back on itself — mirrors the way trauma actually works in communities. Brilliant formally and emotionally devastating."},
+    {rank:1,author:"li_l_dice",text:"Li'l Dice becoming Li'l Zé is one of cinema's most chilling character transformations. You watch innocence curdle into something monstrous and you understand exactly how it happened. That's the horror."},
+  ]},
+  { id:37, title:"Synecdoche, New York", year:2008, director:"Charlie Kaufman", stars:"★★★★★", reviews:[
+    {rank:3,author:"kaufman_grief",text:"A film about a man who spends his entire life rehearsing life instead of living it. The metaphor — a theater production that becomes indistinguishable from reality — is the saddest thing cinema has ever constructed."},
+    {rank:2,author:"philip_seymour",text:"Philip Seymour Hoffman carries two and a half hours of mounting existential dread with complete commitment. It is a performance that asks everything of an actor and receives everything in return."},
+    {rank:1,author:"die_alone",text:"I watched it once and cried for an hour afterward. I have not been able to bring myself to watch it again. I think about it constantly. Charlie Kaufman made a film about death that feels like dying."},
+  ]},
+  { id:38, title:"A Separation", year:2011, director:"Asghar Farhadi", stars:"★★★★★", reviews:[
+    {rank:3,author:"farhadi_moral",text:"A film about a divorce that becomes a film about class, religion, and the impossibility of knowing the whole truth of any situation. Every character is right. Every character is wrong. That's the point."},
+    {rank:2,author:"iranian_cinema",text:"The courtroom scenes are more tense than any thriller. Nothing explodes. No one is evil. Just ordinary people making decisions under pressure that cascade into tragedy. Farhadi is a moral genius."},
+    {rank:1,author:"the_child",text:"The final shot — a child who must choose between her parents — and you never see what she chooses. The film cuts to black. The ambiguity is not a cop-out. It is the whole meaning of the film."},
+  ]},
+  { id:39, title:"In the Mood for Love", year:2000, director:"Wong Kar-wai", stars:"★★★★★", reviews:[
+    {rank:3,author:"wkw_slow_motion",text:"A film about an affair that never happens — told entirely through longing, proximity, and the space between two people who will not let themselves cross. The most romantic film ever made contains almost no romance."},
+    {rank:2,author:"maggie_tony",text:"Maggie Cheung's dresses are a character in the film. The slow-motion corridor shots are a love language. The score plays four notes and destroys you every time. There has never been a film like this."},
+    {rank:1,author:"angkor_wat",text:"The ending — a man whispering a secret into a hole in a wall in Angkor Wat — made me understand something about grief and time and the things we keep inside us that I had never understood before."},
+  ]},
+  { id:40, title:"Bicycle Thieves", year:1948, director:"Vittorio De Sica", stars:"★★★★★", reviews:[
+    {rank:3,author:"neorealism_fan",text:"A father and son searching for a stolen bicycle for one day in postwar Rome. That's the whole film. By the end it contains the entire weight of poverty, dignity, and what desperation does to good people."},
+    {rank:2,author:"de_sica_genius",text:"Shot with non-actors on real streets, it feels more real than any documentary. The father's face in the final scene — the moment his son sees what he's become — is the most devastating image in Italian cinema."},
+    {rank:1,author:"the_final_walk",text:"The last scene. Father and son walking into the crowd. The child reaches up and takes his father's hand. I have never recovered. I do not expect to recover. This is what cinema is for."},
+  ]},
+  { id:41, title:"Pan's Labyrinth", year:2006, director:"Guillermo del Toro", stars:"★★★★½", reviews:[
+    {rank:3,author:"fantasy_grief",text:"A fairy tale set against fascist Spain that refuses to keep its two worlds separate. The fantasy is not an escape from reality — it is how a child processes a reality too brutal to survive otherwise."},
+    {rank:2,author:"pale_man_scene",text:"The Pale Man sequence is the most purely frightening thing in modern fantasy cinema. Eyes in the palms of hands. A table full of food you must not touch. I covered my eyes and kept watching through my fingers."},
+    {rank:1,author:"ofelia_choice",text:"The ending asks whether the magic was real and refuses to answer definitively. Both readings are true. Both are devastating. Del Toro made a film that works as a tragedy and a fairy tale simultaneously."},
+  ]},
+  { id:42, title:"The Florida Project", year:2017, director:"Sean Baker", stars:"★★★★★", reviews:[
+    {rank:3,author:"baker_purple",text:"Filmed in candy colors at the edge of Disney World — a film about children living in poverty who don't know they're in poverty, and the mother who loves them in the only way she knows how."},
+    {rank:2,author:"willem_dafoe_manager",text:"Willem Dafoe plays a motel manager with such quiet decency that every scene he's in feels like a small act of grace. He was robbed of the Oscar. It's one of the most generous performances ever filmed."},
+    {rank:1,author:"final_run",text:"The final scene changes aspect ratio and I started crying before I understood why. Baker lets the children have one last moment of pure imagination. It is the kindest thing a director has done for a character."},
+  ]},
+  { id:43, title:"Portrait of a Lady on Fire", year:2019, director:"Céline Sciamma", stars:"★★★★★", reviews:[
+    {rank:3,author:"sciamma_gaze",text:"A film about looking — about who gets to look, who gets to be seen, and what it means when looking becomes love. Shot entirely from the perspective of one woman watching another. Revolutionary in form and feeling."},
+    {rank:2,author:"noemie_adele_duo",text:"Noémie Merlant and Adèle Haenel create a love story through glances and proximity and the charged silence between two people who know they have almost no time. The chemistry is electric."},
+    {rank:1,author:"vivaldi_ending",text:"The Vivaldi scene at the end. I will not describe it. I will say that it is the most devastating use of a reaction shot in cinema history and that Adèle Haenel's face contains everything the film has built."},
+  ]},
+  { id:44, title:"Werckmeister Harmonies", year:2000, director:"Béla Tarr", stars:"★★★★★", reviews:[
+    {rank:3,author:"bela_tarr_fan",text:"Shot in long, slow takes that last minutes at a time — a film about the arrival of a mysterious circus in a Hungarian town that becomes a meditation on order, chaos, and the collapse of everything good."},
+    {rank:2,author:"whale_scene",text:"The scene where a young man walks through the interior of a whale carcass, alone, is one of the most beautiful and inexplicable images I've seen in cinema. I have thought about it every week for five years."},
+    {rank:1,author:"opening_dance",text:"The film opens with a drunk man directing two other drunks to re-enact the solar system. It goes on for seven minutes. I was completely hypnotized. I knew immediately I was watching something I would never forget."},
+  ]},
+  { id:45, title:"Certified Copy", year:2010, director:"Abbas Kiarostami", stars:"★★★★½", reviews:[
+    {rank:3,author:"kiarostami_copy",text:"Two strangers who may or may not have been a couple for fifteen years walk through a Tuscan village. The film refuses to tell you which reality is real. Both are. Neither is. That ambiguity is the whole point."},
+    {rank:2,author:"juliette_binoche",text:"Juliette Binoche gives one of the most technically demanding performances I've seen — she has to be a different person depending on which version of events is true, and she does it in the same scene simultaneously."},
+    {rank:1,author:"mirror_scene",text:"The scene in the hotel mirror — where she puts on earrings and transforms — is the pivot point of the film. Before it: one story. After it: another. The movie is about that transformation and what causes it."},
+  ]},
+  { id:46, title:"Portrait of Jason", year:1967, director:"Shirley Clarke", stars:"★★★★★", reviews:[
+    {rank:3,author:"documentary_truth",text:"A single person talks to a camera for twelve hours, edited to eighty-one minutes. The result is the most intimate portrait of a human being ever filmed. You can't stop watching and you feel guilty for watching."},
+    {rank:2,author:"jason_holliday",text:"Jason Holliday performs himself so completely that you can never be sure where the performance ends and the person begins. That confusion is the film's subject and its method simultaneously."},
+    {rank:1,author:"shirley_clarke",text:"The moment when Clarke keeps the camera rolling past the point of comfort — when the mask starts to crack — is one of documentary cinema's great ethical moments. She knew exactly what she was doing."},
+  ]},
+  { id:47, title:"Tangerines", year:2013, director:"Zaza Urushadze", stars:"★★★★½", reviews:[
+    {rank:3,author:"estonian_war",text:"Two enemies — one on each side of a war — both recovering in the same house, tended by a man who refuses to acknowledge the war as a reason to abandon either of them. Quiet, devastating, necessary."},
+    {rank:2,author:"lembit_ulfsak",text:"The old man at the center of the film is played with such stillness and such stubborn decency that every scene he's in becomes a lesson in how to live. The performance looks effortless and is not."},
+    {rank:1,author:"tangerine_harvest",text:"The tangerines. Why tangerines. The answer is that beauty and the absurd and the tragic all coexist in the same world and sometimes the same harvest. The ending broke me gently."},
+  ]},
+  { id:48, title:"A Ghost Story", year:2017, director:"David Lowery", stars:"★★★★½", reviews:[
+    {rank:3,author:"sheet_ghost",text:"A man dies. He comes back as a ghost wearing a white sheet with eye holes. The film is completely sincere about this. It works. I don't know how it works. It just does, completely and devastatingly."},
+    {rank:2,author:"rooney_pie_scene",text:"Rooney Mara eats a pie alone on the kitchen floor for five minutes. Static camera. No dialogue. It is the most effective portrayal of grief I have ever seen in a film. Watching it felt intrusive."},
+    {rank:1,author:"cosmic_patience",text:"The film spans hundreds of years in ninety minutes and never feels rushed. Time is the subject and the form. The ghost waits and waits and the waiting is the whole meaning of the film."},
+  ]},
+  { id:49, title:"Capernaum", year:2018, director:"Nadine Labaki", stars:"★★★★½", reviews:[
+    {rank:3,author:"labaki_beirut",text:"A twelve-year-old sues his parents for the crime of having him. Shot with non-professional actors in real Lebanese slums, it feels like a document as much as a drama. The child carries the film completely."},
+    {rank:2,author:"zain_performance",text:"Zain Al Rafeea had never acted before this film. His face is the film. Every emotion — rage, tenderness, exhaustion, hope — passes across it with complete authenticity. It is not a performance. It is a life."},
+    {rank:1,author:"the_statement",text:"'I want grown-ups who brought unwanted children into the world to be punished.' Delivered by a child in a courtroom. The most furious and heartbreaking line of dialogue I've encountered."},
+  ]},
+  { id:50, title:"The Act of Killing", year:2012, director:"Joshua Oppenheimer", stars:"★★★★★", reviews:[
+    {rank:3,author:"oppenheimer_doc",text:"A documentary where real perpetrators of mass killings re-enact their crimes as movie genres. The horror is that they're proud. The deeper horror is watching one of them slowly understand what he did."},
+    {rank:2,author:"anwar_congo",text:"Anwar Congo is one of cinema's most disturbing figures — not a monster, which would be easier, but a man, which is worse. Watching him dance on the rooftop where he killed people is unwatchable and essential."},
+    {rank:1,author:"gagging_scene",text:"The final scene — a man physically overcome on the same rooftop — is one of documentary cinema's most extraordinary moments. You watch guilt arrive in a body that has held it off for fifty years."},
+  ]},
+  { id:51, title:"Leviathan", year:2014, director:"Andrey Zvyagintsev", stars:"★★★★½", reviews:[
+    {rank:3,author:"zvyagintsev_russia",text:"A Russian man loses his house, his wife, and his freedom to a corrupt local official. The title is not metaphorical — the film sees the state as the biblical monster, devouring everything decent in its path."},
+    {rank:2,author:"job_allegory",text:"The Job parallel is so precise it's almost didactic and yet the film never feels like a lecture. It feels like living inside a system designed to crush you and watching every appeal to justice fail."},
+    {rank:1,author:"whale_bones_beach",text:"The whale skeleton on the beach. One image that contains the entire film's meaning. Beauty and destruction coexisting without comment. Russia has never looked more gorgeous or more doomed."},
+  ]},
+  { id:52, title:"The White Ribbon", year:2009, director:"Michael Haneke", stars:"★★★★½", reviews:[
+    {rank:3,author:"haneke_village",text:"Shot in black and white, set in a German village just before the First World War, about children doing terrible things. The horror is in what isn't shown. The horror is in what's implied. Haneke is merciless."},
+    {rank:2,author:"haneke_method",text:"Michael Haneke refuses to explain. Who did it? Why? He won't tell you. The ambiguity is the point — these are the children who will become the generation that starts the next war. You don't need to understand. You need to feel it."},
+    {rank:1,author:"white_ribbon_symbol",text:"The white ribbon of the title — tied on children as a reminder of innocence and purity — becomes the most sinister symbol in the film. Virtue weaponized as control. The whole of 20th century horror in one image."},
+  ]},
+  { id:53, title:"Prisoners", year:2013, director:"Denis Villeneuve", stars:"★★★★½", reviews:[
+    {rank:3,author:"villeneuve_moral",text:"A thriller that asks what a good man is capable of when his child disappears — and doesn't flinch from the answer. Every character makes a defensible choice. Every choice leads somewhere terrible."},
+    {rank:2,author:"gyllenhaal_detective",text:"Jake Gyllenhaal's eye twitch, the spiral notebook, the obsessive case board — he builds a character from pure behavioral detail. The detective is barely in the film and completely dominates it."},
+    {rank:1,author:"maze_ending",text:"The final image. A sound in the dark. The film cuts to black before you can confirm what you heard. I sat in the theater for five minutes after the credits. I still don't know if I was right."},
+  ]},
+  { id:54, title:"Children of Men", year:2006, director:"Alfonso Cuarón", stars:"★★★★★", reviews:[
+    {rank:3,author:"cuaron_hope",text:"A world where no children have been born for eighteen years. The camera moves through it without cuts, without mercy, without sentimentality — and then finds the one thing that can stop a war in its tracks."},
+    {rank:2,author:"clive_owen_carries",text:"Clive Owen holds the film together through sheer exhausted decency. He doesn't want to be a hero. He just keeps moving forward. The film is about what happens when the most ordinary human decency becomes a revolutionary act."},
+    {rank:1,author:"long_take_war",text:"The battle sequence — one continuous take through active combat — is the most technically extraordinary thing I've seen in a cinema. And then, in the middle of it, everything stops. The reason it stops made me cry."},
+  ]},
+  { id:55, title:"Blue Is the Warmest Color", year:2013, director:"Abdellatif Kechiche", stars:"★★★★", reviews:[
+    {rank:3,author:"kechiche_face",text:"A three-hour close-up of a young woman's face as she falls in love and loses it. The camera never stops watching. By the end, you know this face better than any face in cinema."},
+    {rank:2,author:"adele_exarchopoulos",text:"Adèle Exarchopoulos was nineteen and had never had a major role. Her performance is one of the most raw and unguarded things captured on film. The crying scene alone should have won every award."},
+    {rank:1,author:"blue_ending",text:"The final scene — walking away in a crowd of people wearing blue — is the loneliest image in the film. She's surrounded by the color she associates with the person she lost. Perfect and cruel."},
+  ]},
+  { id:56, title:"Mid90s", year:2018, director:"Jonah Hill", stars:"★★★★", reviews:[
+    {rank:3,author:"jonah_debut",text:"A debut film so confident and so specific it's disorienting. Shot on 16mm in a 4:3 ratio, it captures something true about being thirteen and finding the first people who make you feel like yourself."},
+    {rank:2,author:"stevie_skate",text:"The skating sequences are pure joy. The home sequences are pure dread. The film holds both without resolving the tension between them — which is exactly what being that age feels like."},
+    {rank:1,author:"the_talk_scene",text:"The older brother talks to the younger brother at the end. It should be a cliché. It isn't. It's one of the most honest conversations between siblings I've seen in a film, earned by everything before it."},
+  ]},
+  { id:57, title:"Burning", year:2018, director:"Lee Chang-dong", stars:"★★★★½", reviews:[
+    {rank:3,author:"lee_chang2",text:"A mystery that refuses to resolve. A thriller with no catharsis. A love triangle that becomes something no genre can contain. Two and a half hours of sustained unease that ends with one of cinema's great ambiguous acts."},
+    {rank:2,author:"steven_yeun2",text:"Steven Yeun plays menace as calm — a man who may have done something terrible and radiates the absolute serenity of someone who has never needed to justify himself to anyone. It's the scariest performance in recent memory."},
+    {rank:1,author:"sunset_dance2",text:"She dances at sunset with her eyes closed while he watches with that smile. The most beautiful and sinister scene of the decade. I still see it when I close my eyes."},
+  ]},
+  { id:58, title:"Brokeback Mountain", year:2005, director:"Ang Lee", stars:"★★★★★", reviews:[
+    {rank:3,author:"ang_lee_mountain",text:"A love story told almost entirely in silences, landscapes, and the space between two men who cannot say what they mean. The American West has never looked more beautiful or felt more like a prison."},
+    {rank:2,author:"heath_ledger_mumble",text:"Heath Ledger turned repression into a physical performance — you can see the emotion trapped behind his jaw, behind his posture, behind everything he refuses to let himself say. One of cinema's greatest performances."},
+    {rank:1,author:"shirt_scene",text:"The shirt in the closet. I knew it was coming. I had read the story. I cried anyway. The image is so simple and so complete that it contains the entire tragedy of the film in a single object."},
+  ]},
+  { id:59, title:"Uncut Gems", year:2019, director:"Safdie Brothers", stars:"★★★★½", reviews:[
+    {rank:3,author:"safdie_anxiety",text:"Two hours of the most sustained anxiety ever put on screen. Every scene escalates, every conversation overlaps, every bet raises the stakes higher. The film is designed to prevent you from breathing."},
+    {rank:2,author:"adam_sandler_bet",text:"Adam Sandler gives the best performance of his career — a man who genuinely believes the next bet will fix everything, and who keeps losing, and who cannot stop. It's a portrait of addiction that never asks for sympathy."},
+    {rank:1,author:"the_ending_gems",text:"I saw it in a theater. When it ended, half the audience laughed from pure nervous release. The other half sat in silence. I was in the second group. The ending is earned and correct and I hated it completely."},
+  ]},
+  { id:60, title:"The Irishman", year:2019, director:"Martin Scorsese", stars:"★★★★½", reviews:[
+    {rank:3,author:"scorsese_time",text:"A three-and-a-half-hour gangster film that is secretly about old age, regret, and the impossibility of making amends for a life lived in service of violence. The de-aging technology is irrelevant. The sadness is everything."},
+    {rank:2,author:"de_niro_pacino_pesci",text:"Three legends in the same film, all at the peak of their late-career powers. But it's Joe Pesci — barely speaking, completely still — who steals every scene. Restraint as the ultimate performance."},
+    {rank:1,author:"door_left_open",text:"The final image: a door left slightly ajar. The man who spent his life closing doors, eliminating people, burning evidence, asks for this one door to be left open. It is the saddest image in Scorsese's filmography."},
+  ]},
+  { id:61, title:"Aftersun", year:2022, director:"Charlotte Wells", stars:"★★★★★", reviews:[
+    {rank:3,author:"wells_memory2",text:"A daughter tries to reconstruct who her father was from the footage she has of a holiday they took together when she was eleven. The horror is gradual. The grief is retroactive. The filmmaking is extraordinary."},
+    {rank:2,author:"paul_mescal2",text:"Paul Mescal plays a young father who is drowning and cannot tell his daughter. Every small choice — a deflection, a too-long hug, a moment of joy that cracks into something else — lands with devastating precision."},
+    {rank:1,author:"under_pressure2",text:"The Under Pressure sequence. I will not describe it. The context makes it one of the most painful images I have ever seen. Charlotte Wells understood exactly what she was doing. I was not prepared."},
+  ]},
+  { id:62, title:"Nomadland", year:2020, director:"Chloé Zhao", stars:"★★★★½", reviews:[
+    {rank:3,author:"zhao_america",text:"A film about people who live in vans and follow seasonal work across the American West — shot with such tenderness and respect that it never condescends, never aestheticizes poverty, and breaks your heart gently."},
+    {rank:2,author:"frances_mcdormand_van",text:"Frances McDormand disappears into the landscape so completely that sometimes you forget you're watching an actress. The film needed someone who could carry immense grief lightly. She does it better than anyone alive."},
+    {rank:1,author:"rocks_and_sky",text:"The ending is a woman driving into a landscape so vast and indifferent it should feel hopeless. It doesn't. It feels like freedom. Zhao makes you understand, in one image, exactly what that choice costs and what it gives."},
+  ]},
+  { id:63, title:"First Cow", year:2019, director:"Kelly Reichardt", stars:"★★★★½", reviews:[
+    {rank:3,author:"reichardt_frontier",text:"Two men in the Oregon frontier make illegal cookies using a rich man's cow and try to build a small life inside a system designed to crush small lives. The most gentle and devastating film about capitalism ever made."},
+    {rank:2,author:"john_magaro_john",text:"The friendship between the two men is one of cinema's great platonic love stories — tender, specific, funny, and built on the mutual recognition of two outsiders who understand each other immediately."},
+    {rank:1,author:"the_first_scene",text:"The film opens at the end — we see what will happen before we understand who these people are. When you reach that ending having known these characters, the image becomes unbearable. Reichardt planned it perfectly."},
+  ]},
 ];
+
 
 // ════════════════════════════════════════════════════════════
 //  SONGS DATA
